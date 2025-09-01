@@ -1,0 +1,259 @@
+{
+  "root": {
+    "top_bar": {
+      "services": "Ntchito",
+      "aboutUs": "Zaife",
+      "faqs": "Mafunso",
+      "signIn": "Lowani",
+      "getStarted": "Yambani"
+    },
+    "hero_section": {
+      "content": [
+        {
+          "title": "Kusamalira Kwathunthu pa Moyo Wonse",
+          "description": "Pa Wezi Medical Centre, gulu la akatswiri limapereka chisamaliro chokhulupirika kuchokera ku opaleshoni kupita ku ana, zamankhwala a akazi, ndi zamankhwala achikhalidwe.",
+          "img": "/bg10.jpg"
+        },
+        {
+          "title": "Chisamaliro Chabwino kwa Aliyense",
+          "description": "Ndi dokotala omwe ali ndi zambiri mu opaleshoni, thanzi la akazi, ana, ndi zamankhwala a akulu, WMC ili pano kukusamalirani inu ndi banja lanu.",
+          "img": "/bg6.jpg"
+        },
+        {
+          "title": "Chisamaliro cha Akatswiri, Ntchito Yokoma Mtima",
+          "description": "Gulu la akatswiri amankhwala limaphatikiza zaka zambiri za chidziwitso ndi chisamaliro chaumunthu kuti inu ndi okondedwa anu mukhale ndi thanzi labwino.",
+          "img": "/bg8.jpg"
+        }
+      ],
+      "buttons": {
+        "contactUs": "Lumikizanani Nafe",
+        "ourServices": "Ntchito Zathu"
+      }
+    },
+    "services": {
+      "header": "Ntchito Zathu",
+      "description": "Pa Wezi Medical Centre, timapereka ntchito zonse za chisamaliro chaumankhwala ndi malamulo apamwamba kwambiri a mankhwala ndi chisamaliro cha odwala.",
+      "cards": [
+        {
+          "title": "Opaleshoni",
+          "description": "Chisamaliro chokwanira cha opaleshoni ndi akatswiri opherera kuonetsetsa njira zotetezeka komanso zofunika.",
+          "image": "/surgery.jpg"
+        },
+        {
+          "title": "Zamankhwala a Akazi & Gynecology",
+          "description": "Ntchito zokhudza thanzi la akazi, kuphatikizapo chisamaliro cha pakati pa mimba, kubereka, ndi mankhwala a gynecological.",
+          "image": "/gynecology.jpg"
+        },
+        {
+          "title": "Mankhwala a Mwana & Katemera",
+          "description": "Sungani inu ndi okondedwa anu ndi katemera ofunikira kwa ana, akulu, komanso pazolinga zaulendo.",
+          "image": "/vaccinations.jpg"
+        },
+        {
+          "title": "Zowunika Zamankhwala",
+          "description": "Zowunika zolondola komanso nthawi yake kuti zikutsogolereni mankhwala abwino ndi kukonza thanzi lanu.",
+          "image": "/diagnosis.jpg"
+        },
+        {
+          "title": "Kusamalira Thupi",
+          "description": "Khalani ndi thanzi labwino ndi ma check-up nthawi zonse omwe amawunikira mavuto mwachangu ndikukusungirani bwino.",
+          "image": "/checkup.jpg"
+        }
+      ]
+    },
+    "faqs": {
+      "footer": {
+        "header": "Mwakukhumba Mafumbu Ghanyake?",
+        "description": "A staff athu agho ali na ulemu na kudziwa ali pano kuti akuthandizeni na mafumbu ghanyake panji nkhaza zakukwaska ntchito zathu zaumoyo na zipatala.",
+        "emailUs": "Imelo Kwa Ife",
+        "call": "Fonani"
+      },
+      "header": "Mafunso Ofunsidwa Kawirikawiri",
+      "description": "Pezani mayankho pamafunso ofunsidwa kawirikawiri okhudza ntchito zathu, ma appointment, ndi zipangizo. Gwiritsani ntchito kufufuza ndi kusefa pansipa kuti mupeze mwachangu zomwe mukufuna.",
+      "entries": [
+        {
+          "id": 1,
+          "question": "Ndi nthawi yanji yomwe mumagwira ntchito?",
+          "answer": "Pa Wezi Medical Centre, tigwira ntchito 24/7, tikupereka ntchito zamankhwala nthawi zonse chaka chonse. Gulu la akatswiri limakhala likupezeka nthawi zonse kuti lipereke chisamaliro cha mwadzidzidzi, ma consults nthawi zonse, ndi ntchito zonse zamankhwala pamene mukufuna. Palibe appointment yofunikira pamwadzidzidzi.",
+          "icon": "FaClock",
+          "category": "General",
+          "keywords": ["hours", "open", "24/7", "time", "emergency", "always"]
+        },
+        {
+          "id": 2,
+          "question": "Kodi mumavomereza inshuwaransi?",
+          "answer": "Inde, timavomereza mapulani ambiri a inshuwaransi kuphatikiza National Health Insurance, inshuwaransi ya anthu payekha, ndi mapulani a kampani. Timagwiranso ntchito ndi othandizira inshuwaransi akunja. Bweretsani khadi lanu la inshuwaransi ndi chizindikiro chovomerezeka mukakacheza. Dipatimenti ya billing ingathandize kuonetsetsa coverage ndi kufotokozera co-payments kapena deductibles.",
+          "icon": "FaShieldAlt",
+          "category": "Insuaransi & Zamalipiro",
+          "keywords": [
+            "insurance",
+            "coverage",
+            "payment",
+            "billing",
+            "cost",
+            "nhis"
+          ]
+        },
+        {
+          "id": 3,
+          "question": "Ndingakonzekere bwanji appointment?",
+          "answer": "Kukonza appointment ndikosavuta! Foni ku 0880 33 39 80, imelo ku wezi.enquiries@gmail.com, kapena pitani ku Mapale, Mzuzu. Chifukwa timagwira ntchito nthawi zonse, mutha kulumikizana nthawi iliyonse. Pazinthu zapadera monga ma consult a surgery kapena akatswiri ena, tikulimbikitsa kulankhula pasadakhale kuti muwonetsetse kupezeka.",
+          "icon": "FaCalendarAlt",
+          "category": "Misonkhano",
+          "keywords": [
+            "appointment",
+            "schedule",
+            "booking",
+            "visit",
+            "call",
+            "email"
+          ]
+        },
+        {
+          "id": 4,
+          "question": "Ndingabwereze chiyani pa ulendo wanga woyamba?",
+          "answer": "Pa ulendo wanu woyamba, chonde bweretsani: chizindikiro chovomerezeka (passport kapena national ID), khadi la inshuwaransi (ngati likupezeka), mndandanda wathunthu wa mankhwala omwe mukugwiritsa ntchito ndi madosage, mbiri zamankhwala kapena zotsatira za mayeso apitawo, kalata zokoka kuchokera kwa dokotala ena, komanso mndandanda wolemba wa mafunso kapena nkhawa zamankhwala zomwe mukufuna kukambirana ndi dokotala.",
+          "icon": "FaFileAlt",
+          "category": "General",
+          "keywords": [
+            "first visit",
+            "documents",
+            "bring",
+            "requirements",
+            "id",
+            "records"
+          ]
+        },
+        {
+          "id": 5,
+          "question": "Kodi mumapereka ntchito za mwadzidzidzi?",
+          "answer": "Inde! Wezi Medical Centre imapereka ntchito zamankhwala 24/7. Dipatimenti ya mwadzidzidzi ili ndi zipangizo zamakono ndipo imagwiridwa ndi madokotala ndi anzawo okonzeka nthawi zonse. Timachita zonse kuchokera pa zovulaza zazing'ono mpaka mwadzidzidzi ovuta kwambiri. Foni 0880 33 39 80 nthawi yomweyo ngati pali mwadzidzidzi.",
+          "icon": "FaAmbulance",
+          "category": "Zadzidzidzi",
+          "keywords": [
+            "emergency",
+            "urgent",
+            "trauma",
+            "24/7",
+            "critical",
+            "ambulance"
+          ]
+        },
+        {
+          "id": 6,
+          "question": "Kodi mumapereka chitetezo cha katemera?",
+          "answer": "Timapereka ntchito zonse za katemera kwa azaka zonse, kuphatikiza katemera wamba wa ana, boosters kwa akulu, katemera waulendo, katemera wamba wa nyengo, katemera wa COVID-19, ndi katemera wochita ntchito. Ma schedule athu a katemera amatsatira malamulo a WHO ndi njira zapadziko lonse. Timaperekanso satifiketi ya katemera kwa zofunikira za ulendo.",
+          "icon": "FaSyringe",
+          "category": "Kuthandiza Kuwepa Matenda",
+          "keywords": [
+            "vaccination",
+            "immunization",
+            "vaccines",
+            "shots",
+            "covid",
+            "travel",
+            "children"
+          ]
+        },
+        {
+          "id": 7,
+          "question": "Zotsatira za mayeso za diagnostic zimatenga nthawi yayitali bwanji?",
+          "answer": "Mayeso ambiri a magazi ndi diagnostic nthawi zambiri amapezeka mkati mwa maola 24-48. Mayeso ovuta monga cultures kapena specialized panels amatha kutenga masiku 3-7. Mayeso ofunikira amatha kuchitika mkati mwa maola 2-4 ngati zili zofunikira. Tikulumikizana nanu nthawi yomweyo zikapezeka ndipo tikukonza ma appointment otsatira ngati kuli kofunikira.",
+          "icon": "FaStethoscope",
+          "category": "Ntchito Zodziwiska Zaumoyo",
+          "keywords": [
+            "test results",
+            "lab",
+            "blood test",
+            "diagnostic",
+            "results",
+            "turnaround"
+          ]
+        },
+        {
+          "id": 8,
+          "question": "Kodi mumapereka mapaketi a maternity?",
+          "answer": "Inde! Timapereka mapaketi a maternity kuphatikiza ma consult a prenatal, counseling ya zakudya, ntchito za kubereka ndi zipinda zamakono, chisamaliro cha postnatal, kuthandiza kuyamwitsa, ndi chisamaliro cha mwana watsopano. Gulu la akatswiri a obstetrics limapereka chisamaliro chapadera nthawi yonse ya mimba yanu mu zipinda zokhazikika komanso zabanja.",
+          "icon": "FaBaby",
+          "category": "Kuthandiza Ana Amayi ndi Ana",
+          "keywords": [
+            "maternity",
+            "pregnancy",
+            "delivery",
+            "prenatal",
+            "postnatal",
+            "newborn",
+            "obstetrics"
+          ]
+        }
+      ]
+    }
+  },
+  "general": {
+    "signIn": "Njerani",
+    "signUp": "Lembeskani",
+    "doNotHaveAccount": "Kasi mulije akaunti?",
+    "alreadyHaveAccount": "Kasi muli nayo kale akaunti?",
+    "forgetPassword": "Kasi mwalurwa mawu ghachisisi?",
+    "slogan": "Tigomezgani",
+    "subSlogan1": "Wakugomezgeka na ŵalwari na ŵamunyumba",
+    "subSlogan2": "Wovwiri wauweme wa umoyo 24/7",
+    "subSlogan3": "Nkhwantha za vyaumoyo zakumanya makora ntchito",
+    "email": "Imelo",
+    "password": "Mawu ghachisisi",
+    "fullName": "Zina lose",
+    "comfirmPassword": "Khozgerani mawu ghachisisi",
+    "gender": "Jenda",
+    "male": "Mwanalume",
+    "female": "Mwanakazi",
+    "back": "Welerani",
+    "next": "Panthazi",
+    "preferedLanguage": "Chiyowoyero chakukhumbika",
+    "search": "Penjani apa..."
+  },
+  "greeting": {
+    "goodMorning": "Mwauka wuli?",
+    "goodAfterNoon": "Mwatandala wuli?",
+    "goodEvening": "Namise iweme",
+    "goodNight": "Usiku uweme",
+    "hello": "Monire",
+    "dashboardGreeting": "Muŵe na zuŵa liweme pakuwoneseska vya Chipatala cha Wezi. Tawonga pakuwoneseska kuti vyose vikwenda makora!",
+    "weziBotGreeting": "Kasi Wezi Bot yingamovwirani wuli muhanya uno?",
+    "readyToAssist": "Yakunozgeka kumovwirani"
+  },
+  "sideBar": {
+    "dashboard": "Dashboard",
+    "home": "Pakuyambira",
+    "enquiries": "Mafumbo",
+    "wezBot": "Wezi Bot",
+    "appointments": "Vyakukumana",
+    "activeEmergency": "Vyamwaluŵiro vyapano",
+    "pastEmergency": "Vyamwaluŵiro vyakale",
+    "navigation": "Ulongozgi wa nthowa",
+    "weziMap": "Mapu gha Wezi",
+    "medicalRecords": "Malemba gha kuchipatala",
+    "myRecords": "Malemba ghane",
+    "profile": "Mbiri yinu",
+    "myProfile": "Mbiri yane",
+    "userManagement": "Kawoneleru ka ŵakugwiliskira ntchito",
+    "departments": "Madipatimenti",
+    "allDepartments": "Madipatimenti ghose",
+    "services": "Wovwiri",
+    "allServices": "Wovwiri wose",
+    "analytics": "Kusanda",
+    "systemAnalytics": "Kusanda kwa Systemu",
+    "userAnalytics": "Kusanda kwa ŵakugwiliskira ntchito",
+    "departmentAnalytics": "Kusanda kwa madipatimenti",
+    "emergencies": "Vyamwaluŵiro",
+    "staffManagement": "Antchito",
+    "staff": "Antchito"
+  },
+  "errors": {
+    "signInInCompleteFieldsError": "Chonde lembani imelu na pasiwedi yinu kuti mulutilire!!",
+    "invalidEmailError": "Chonde lembani imelu yiwemi!!",
+    "invalidRole": "Udindo Wambula Kuzomerezgeka",
+    "somthingWentWrong": "Chinyake chabudika, chonde yeskaniso!!!",
+    "inCompleteFields": "Chonde zuzani apa kuti mulutilire!!",
+    "nonMatchingPasswords": "Mapasiwedi ghakukolerana yayi!!"
+  }
+}

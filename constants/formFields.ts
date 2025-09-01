@@ -1,0 +1,145 @@
+export const signInFormFields = [
+  {
+    id: "email",
+    title: "Email",
+    type: "email",
+    placeholder: "yourname@example.com",
+    required: true,
+    variable: "email",
+  },
+  {
+    id: "password",
+    title: "Password",
+    type: "password",
+    placeholder: "••••••••••••",
+    required: true,
+    variable: "password",
+  },
+];
+
+export const signUpFields = {
+  page1: [
+    {
+      id: "fullName",
+      title: "Full Name",
+      type: "text",
+      placeholder: "John Doe",
+      required: true,
+      variable: "full_name",
+    },
+    {
+      id: "email",
+      title: "Email",
+      type: "email",
+      placeholder: "yourname@example.com",
+      required: true,
+      variable: "email",
+    },
+    {
+      id: "password",
+      title: "Password",
+      type: "password",
+      placeholder: "••••••••••••",
+      required: true,
+      variable: "password",
+    },
+    {
+      id: "comfirmPassword",
+      title: "Confirm Password",
+      type: "password",
+      placeholder: "••••••••••••",
+      required: true,
+      variable: "confirmPassword",
+    },
+  ],
+  page2: [
+    // {
+    //   id: "dob",
+    //   title: "Date of Birth",
+    //   type: "date",
+    //   placeholder: "YYYY-MM-DD",
+    //   required: true,
+    //   variable: "dob",
+    // },
+    {
+      id: "gender",
+      title: "Gender",
+      type: "list",
+      placeholder: "Select Gender",
+      variable: "gender",
+      options: [{ name: "male" }, { name: "female" }],
+    },
+    {
+      id: "preferedLanguage",
+      title: "Preferred Language",
+      type: "list",
+      placeholder: "Select Language",
+      variable: "preferred_lang",
+      options: [
+        { name: "English", value: "en" },
+        { name: "Chichewa", value: "ny" },
+        { name: "Tumbuka", value: "tum" },
+      ],
+    },
+  ],
+};
+
+export const addUserFields = {
+  basicInfo: [
+    {
+      id: "fullName",
+      title: "Full Name",
+      type: "text",
+      placeholder: "John Doe",
+      required: true,
+      variable: "full_name",
+    },
+    {
+      id: "email",
+      title: "Email",
+      type: "email",
+      placeholder: "yourname@example.com",
+      required: true,
+      variable: "email",
+    },
+    {
+      id: "role",
+      title: "Role",
+      type: "list",
+      placeholder: "Select Role",
+      variable: "role",
+      options: [
+        { name: "Patient", value: "patient" },
+        { name: "Ambulance driver", value: "ambulance_driver" },
+        { name: "Nurse", value: "nurse" },
+        { name: "Doctor", value: "doctor" },
+        { name: "Admin", value: "admin" },
+        { name: "HOD", value: "hod" },
+      ],
+    },
+    {
+      id: "phoneNumber",
+      title: "Phone Number",
+      type: "text",
+      placeholder: "0888659011",
+      required: true,
+      variable: "phone_number",
+    },
+    {
+      id: "gender",
+      title: "Gender",
+      type: "list",
+      placeholder: "Select Gender",
+      variable: "gender",
+      options: [{ name: "male" }, { name: "female" }],
+    },
+    {
+      id: "dateOfBirth",
+      title: "Date of Birth",
+      type: "date",
+      placeholder: "YYYY-MM-DD",
+      required: true,
+      variable: "dob",
+    },
+  ],
+};

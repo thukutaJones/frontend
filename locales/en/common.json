@@ -1,0 +1,259 @@
+{
+  "root": {
+    "top_bar": {
+      "services": "Services",
+      "aboutUs": "About Us",
+      "faqs": "FAQs",
+      "signIn": "Sign In",
+      "getStarted": "Get Started"
+    },
+    "hero_section": {
+      "content": [
+        {
+          "title": "Comprehensive Care for Every Stage of Life",
+          "description": "At Wezi Medical Centre, our team of specialists provides trusted healthcare from surgery to pediatrics, gynecology, and general medicine.",
+          "img": "/bg10.jpg"
+        },
+        {
+          "title": "Quality Healthcare for Everyone",
+          "description": "With experienced doctors in surgery, women’s health, pediatrics, and adult medicine, WMC is here to care for you and your family.",
+          "img": "/bg6.jpg"
+        },
+        {
+          "title": "Specialist Care, Compassionate Service",
+          "description": "Our dedicated team of medical experts combines years of experience with personalized care to keep you and your loved ones healthy.",
+          "img": "/bg8.jpg"
+        }
+      ],
+      "buttons": {
+        "contactUs": "Contact Us",
+        "ourServices": "Our Services"
+      }
+    },
+    "services": {
+      "header": "Our Services",
+      "description": "At Wezi Medical Centre, we provide comprehensive healthcare services with the highest standards of medical excellence and patient care.",
+      "cards": [
+        {
+          "title": "General Surgery",
+          "description": "Comprehensive surgical care with skilled professionals ensuring safe and effective procedures.",
+          "image": "/surgery.jpg"
+        },
+        {
+          "title": "Obstetrics & Gynecology",
+          "description": "Dedicated women’s health services, including prenatal care, childbirth, and gynecological treatments.",
+          "image": "/gynecology.jpg"
+        },
+        {
+          "title": "Vaccinations",
+          "description": "Protect yourself and your loved ones with essential vaccines for children, adults, and travel needs.",
+          "image": "/vaccinations.jpg"
+        },
+        {
+          "title": "Diagnostics",
+          "description": "Accurate and timely medical diagnostics to guide effective treatment and improve health outcomes.",
+          "image": "/diagnosis.jpg"
+        },
+        {
+          "title": "Routine Check-Ups",
+          "description": "Stay on top of your health with regular check-ups designed to detect issues early and keep you well.",
+          "image": "/checkup.jpg"
+        }
+      ]
+    },
+    "faqs": {
+      "header": "Frequently Asked Questions",
+      "description": "Find answers to common questions about our services, appointments, and facilities. Use the search and filters below to quickly find what you're looking for.",
+      "footer": {
+        "header": "Still Have Questions?",
+        "description": "Our friendly and knowledgeable staff is here to help you with any additional questions or concerns about our medical services and facilities.",
+        "emailUs": "Email Us",
+        "call": "Call"
+      },
+      "entries": [
+        {
+          "id": 1,
+          "question": "What are your operating hours?",
+          "answer": "Wezi Medical Centre operates 24/7, providing round-the-clock medical services every day of the year. Our dedicated team of healthcare professionals is always available to provide emergency care, routine consultations, and comprehensive medical services whenever you need them. No appointment necessary for emergencies.",
+          "icon": "FaClock",
+          "category": "General",
+          "keywords": ["hours", "open", "24/7", "time", "emergency", "always"]
+        },
+        {
+          "id": 2,
+          "question": "Do you accept insurance coverage?",
+          "answer": "Yes, we accept most major insurance plans including National Health Insurance, private medical insurance, and corporate health schemes. We also work with international insurance providers. Please bring your insurance card and valid identification when visiting. Our dedicated billing department can help verify your coverage and explain any co-payments or deductibles.",
+          "icon": "FaShieldAlt",
+          "category": "Insurance & Billing",
+          "keywords": [
+            "insurance",
+            "coverage",
+            "payment",
+            "billing",
+            "cost",
+            "nhis"
+          ]
+        },
+        {
+          "id": 3,
+          "question": "How do I schedule an appointment?",
+          "answer": "Scheduling is easy and convenient! Call us at 0880 33 39 80, email wezi.enquiries@gmail.com, or visit our facility at Mapale, Mzuzu. Since we're always open, you can contact us anytime. For specialized services like surgery consultations or specific specialists, we recommend calling ahead to ensure availability.",
+          "icon": "FaCalendarAlt",
+          "category": "Appointments",
+          "keywords": [
+            "appointment",
+            "schedule",
+            "booking",
+            "visit",
+            "call",
+            "email"
+          ]
+        },
+        {
+          "id": 4,
+          "question": "What should I bring to my first visit?",
+          "answer": "For your first visit, please bring: valid identification (passport or national ID), insurance card (if applicable), complete list of current medications with dosages, any previous medical records or test results, referral letters from other doctors, and a written list of questions or health concerns you'd like to discuss with your healthcare provider.",
+          "icon": "FaFileAlt",
+          "category": "General",
+          "keywords": [
+            "first visit",
+            "documents",
+            "bring",
+            "requirements",
+            "id",
+            "records"
+          ]
+        },
+        {
+          "id": 5,
+          "question": "Do you provide emergency services?",
+          "answer": "Absolutely! Wezi Medical Centre provides comprehensive 24/7 emergency medical services. Our emergency department is fully equipped with modern medical equipment and staffed by qualified emergency medicine physicians and nurses around the clock. We handle everything from minor injuries to life-threatening emergencies. Call 0880 33 39 80 immediately for emergencies.",
+          "icon": "FaAmbulance",
+          "category": "Emergency Services",
+          "keywords": [
+            "emergency",
+            "urgent",
+            "trauma",
+            "24/7",
+            "critical",
+            "ambulance"
+          ]
+        },
+        {
+          "id": 6,
+          "question": "What vaccination services do you offer?",
+          "answer": "We provide comprehensive vaccination services for all age groups, including routine childhood immunizations, adult boosters, travel vaccines, seasonal flu shots, COVID-19 vaccinations, and occupational health vaccines. Our vaccination schedules follow WHO guidelines and international standards. We also offer vaccination certificates for travel requirements.",
+          "icon": "FaSyringe",
+          "category": "Preventive Care",
+          "keywords": [
+            "vaccination",
+            "immunization",
+            "vaccines",
+            "shots",
+            "covid",
+            "travel",
+            "children"
+          ]
+        },
+        {
+          "id": 7,
+          "question": "How long do diagnostic test results take?",
+          "answer": "Most routine blood tests and basic diagnostic procedures have results available within 24-48 hours. Complex tests like cultures or specialized panels may take 3-7 days. Urgent tests can be processed within 2-4 hours when medically necessary. We'll contact you promptly when results are ready and schedule follow-up appointments as needed.",
+          "icon": "FaStethoscope",
+          "category": "Diagnostic Services",
+          "keywords": [
+            "test results",
+            "lab",
+            "blood test",
+            "diagnostic",
+            "results",
+            "turnaround"
+          ]
+        },
+        {
+          "id": 8,
+          "question": "Do you offer maternity packages?",
+          "answer": "Yes! We offer comprehensive maternity care packages including prenatal consultations, nutritional counseling, delivery services with modern birthing suites, postnatal care, breastfeeding support, and complete newborn care. Our experienced obstetrics team provides personalized care throughout your pregnancy journey in our comfortable, family-friendly facility.",
+          "icon": "FaBaby",
+          "category": "Maternity Care",
+          "keywords": [
+            "maternity",
+            "pregnancy",
+            "delivery",
+            "prenatal",
+            "postnatal",
+            "newborn",
+            "obstetrics"
+          ]
+        }
+      ]
+    }
+  },
+  "general": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "doNotHaveAccount": "Do not have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "forgetPassword": "Forgot Password?",
+    "slogan": "Lean on us",
+    "subSlogan1": "Trusted by patients and families",
+    "subSlogan2": "24/7 Quality Healthcare",
+    "subSlogan3": "Experienced Medical Professionals",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "comfirmPassword": "Confirm Password",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "back": "Back",
+    "next": "Next",
+    "preferedLanguage": "Prefered Language",
+    "search": "Search here..."
+  },
+  "greeting": {
+    "goodMorning": "Good morning",
+    "goodAfterNoon": "Good afternoon",
+    "goodEvening": "Good evening",
+    "goodNight": "Good night",
+    "hello": "Help",
+    "dashboardGreeting": "Have a nice a day managing Wezi Clinic. Thank you for keeping everything running perfectly!",
+    "weziBotGreeting": "How can Wezi Bot help you today?",
+    "readyToAssist": "Ready to assist you"
+  },
+  "sideBar": {
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "enquiries": "Enquiries",
+    "wezBot": "Wezi Bot",
+    "appointments": "Appointments",
+    "activeEmergency": "Active Emergency",
+    "pastEmergency": "Past Emergencies",
+    "navigation": "Navigation",
+    "weziMap": "Wezi Map",
+    "medicalRecords": "Medical Records",
+    "myRecords": "My Records",
+    "profile": "Profile",
+    "myProfile": "My Profile",
+    "userManagement": "User Management",
+    "departments": "Departments",
+    "allDepartments": "All Departments",
+    "services": "Services",
+    "allServices": "All Services",
+    "analytics": "Analytics",
+    "systemAnalytics": "System Analytics",
+    "userAnalytics": "User Analytics",
+    "departmentAnalytics": "Department Analytics",
+    "emergencies": "Emergencies",
+    "staffManagement": "Staff Management",
+    "staff": "Antchito"
+  },
+  "errors": {
+    "signInInCompleteFieldsError": "Please enter both email and password to continue!!",
+    "invalidEmailError": "Please enter a valid email address!!",
+    "invalidRole": "Invalid Role",
+    "somthingWentWrong": "Something went wrong please try again!!!",
+    "inCompleteFields": "Please fill in the field to continue!!",
+    "nonMatchingPasswords": "Passwords do not match!!"
+  }
+}
