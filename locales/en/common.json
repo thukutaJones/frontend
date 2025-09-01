@@ -208,8 +208,9 @@
     "female": "Female",
     "back": "Back",
     "next": "Next",
-    "preferedLanguage": "Prefered Language",
-    "search": "Search here..."
+    "preferredLanguage": "Prefered Language",
+    "search": "Search here...",
+    "district": "District"
   },
   "greeting": {
     "goodMorning": "Good morning",

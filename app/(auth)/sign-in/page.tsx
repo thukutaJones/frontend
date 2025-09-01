@@ -1,21 +1,44 @@
 "use client";
 
-import AnimatedBgEelments from "@/components/auth/AnimatedBgEelments";
-import BrandingColumn from "@/components/auth/BrandingColumn";
-import SignInFormColumn from "@/components/auth/SignInFormColumn";
+import React, { useState, useEffect } from "react";
+import Header from "@/components/auth/Header";
+import AnimatedBackgroundPattern from "@/components/auth/AnimatedBackgroundPattern";
+import FloatingMedicalIcons from "@/components/auth/FloatingMedicalIcons";
+import SignInForm from "@/components/auth/SignInForm";
+import Footer from "@/components/auth/Footer";
+import DecorativeElements from "@/components/auth/DecorativeElements";
 
-const page = () => {
+export default function SignIn() {
+  const [isPageLoaded, setIsPageLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsPageLoaded(true);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-blue-50 relative overflow-hidden">
-      <AnimatedBgEelments />
-      <div className="relative z-10 min-h-screen flex items-center justify-center p-6">
-        <div className="w-full flex flex-col md:flex-row items-center justify-center gap-8">
-          <BrandingColumn />
-          <SignInFormColumn />
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 relative overflow-hidden">
+      <AnimatedBackgroundPattern />
+      <FloatingMedicalIcons />
+      <div className="relative z-10 flex items-center justify-center min-h-screen px-4 py-8">
+        <div
+          className={`
+            w-full max-w-md transition-all duration-1000 transform
+            ${
+              isPageLoaded
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-10"
+            }
+          `}
+        >
+          <Header
+            title="Welcome Back"
+            subTitle=" Sign in to Wezi Medical Centre"
+          />
+          <SignInForm />
+          <Footer />
         </div>
       </div>
+      <DecorativeElements />
     </div>
   );
-};
-
-export default page;
+}

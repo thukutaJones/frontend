@@ -198,7 +198,7 @@ export default function Sidebar({
                       onMouseEnter={() => setHoveredItem(item.key)}
                       onMouseLeave={() => setHoveredItem(null)}
                       className={`
-                        relative w-full flex items-center justify-between p-4 rounded-2xl
+                        relative w-full flex items-center justify-between py-1 px-4 rounded-lg
                         transition-all duration-500 group overflow-hidden backdrop-blur-sm
                         bg-white
                         ${
@@ -227,7 +227,7 @@ export default function Sidebar({
                         >
                           <Icon
                             className={`
-                            w-6 h-6 transition-all duration-500
+                            w-4 h-4 transition-all duration-500
                             ${
                               isActive
                                 ? "text-blue-900"
@@ -241,7 +241,7 @@ export default function Sidebar({
                         </div>
 
                         {isExpanded && (
-                          <span className="font-bold text-base transition-all duration-300">
+                          <span className="font-bold text-sm transition-all duration-300">
                             {item?.key ? t(`sideBar.${item?.key}`): item?.title}
                           </span>
                         )}
