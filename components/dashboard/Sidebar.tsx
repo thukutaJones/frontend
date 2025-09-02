@@ -217,7 +217,7 @@ export default function Sidebar({
                       <div className="flex items-center space-x-4 relative z-10">
                         <div
                           className={`
-                          relative p-3 rounded-xl transition-all duration-500 group-hover:scale-110
+                          relative p-3 rounded-2xl transition-all duration-500 group-hover:scale-110
                           ${
                             isActive
                               ? "bg-blue-50 shadow"
@@ -278,7 +278,7 @@ export default function Sidebar({
 
                       {/* Active Indicator */}
                       {isActive && isExpanded && (
-                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-12 bg-blue-900 rounded-r-full animate-in slide-in-from-left-2 duration-500"></div>
+                        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-14 bg-blue-900 rounded-r-full animate-in slide-in-from-left-2 duration-500"></div>
                       )}
                     </button>
 

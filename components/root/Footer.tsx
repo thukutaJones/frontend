@@ -10,7 +10,6 @@ import {
   FaInstagram,
   FaLinkedin
 } from "react-icons/fa";
-import ClinicPanorama from "../ClinicTour";
 
 interface FAQ {
   id: number;
@@ -117,14 +116,6 @@ const FAQs: React.FC = () => {
               </div>
             </div>
           ))}
-
-          {/* 360° Virtual Tour */}
-          <div className="mt-20">
-            <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-              Take a Tour of Wezi Clinic
-            </h3>
-            <ClinicPanorama />
-          </div>
         </div>
       </div>
 

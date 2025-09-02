@@ -21,6 +21,7 @@ const page = () => {
   const [typingText, setTypingText] = useState("");
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,12 +32,11 @@ const page = () => {
   //user dummy data
   const userName = user?.name;
 
-  // const welcomeText = `${t("greeting.hello")}, ${userName}\n${t(
-  //   "greeting.weziBotGreeting"
-  // )}?`;
+  const welcomeText = `${t("greeting.hello")}, ${userName}\n${t(
+    "greeting.weziBotGreeting"
+  )}?`;
 
-  const welcomeText = `Hello, ${userName} How can Wezi Bot help you today??`;
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  // const welcomeText = `Hello, ${userName} How can Wezi Bot help you today??`;
 
   // Typing animation effect for welcome message
   useEffect(() => {
@@ -80,7 +80,7 @@ const page = () => {
     const newMessage = {
       message: inputText,
       sender: "user",
-      createAt: new Date(),
+      createAt: new Date().toUTCString(),
     };
 
     setMessages((prev: any) => [...prev, newMessage]);
@@ -98,16 +98,12 @@ const page = () => {
         localStorage.setItem("device_id", deviceId);
         payload = { ...payload, userType: "guest", id: deviceId };
       }
-      const res = await axios.post(
-        `${baseUrl}/api/chat`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.token}`,
-          },
-        }
-      );
-      const chatReply = res?.data?.message;
+      const res = await axios.post(`${baseUrl}/api/chat`, payload, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
+      const chatReply = res?.data;
       console.log(chatReply);
 
       setMessages((prev: any) => [...prev, chatReply]);
@@ -183,6 +179,25 @@ const page = () => {
       handleSendMessage();
     }
   };
+
+  const fetchConversation = async () => {
+    if (!user) return;
+    try {
+      setIsLoading(true);
+      const res = await axios.get(
+        `${baseUrl}/api/user-conversation/${user?.id}`
+      );
+      setMessages(res.data?.conversation);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchConversation();
+  }, [user]);
 
   if (isLoading || !user) return <LoadingAnimation />;
 
