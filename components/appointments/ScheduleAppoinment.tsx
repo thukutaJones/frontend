@@ -13,82 +13,8 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import { FaBuilding, FaUserMd, FaStethoscope } from "react-icons/fa";
-
-// Mock data based on your specifications
-const mockDoctors = [
-  {
-    _id: "68b63e75f1a7db883e78a648",
-    name: "Dr. Jones Thukuta",
-    username: "moth_joe",
-    email: "moth@test.com",
-    phone: "0888941871",
-    linkedStaffId: {
-      _id: "68b63e75f1a7db883e78a646",
-      specialties: ["Cardiology", "Internal Medicine"],
-      workingHours: [],
-      isAvailable: true,
-      departmentId: "68b6303dead27f943db16382"
-    },
-    role: "doctor",
-    status: "active",
-    gender: "male"
-  },
-  {
-    _id: "68b63e75f1a7db883e78a649",
-    name: "Dr. Sarah Wilson",
-    username: "sarah_wilson",
-    email: "sarah@test.com",
-    phone: "0888941872",
-    linkedStaffId: {
-      _id: "68b63e75f1a7db883e78a647",
-      specialties: ["Dental Surgery", "Orthodontics"],
-      workingHours: [],
-      isAvailable: false,
-      departmentId: "68b6303dead27f943db16383"
-    },
-    role: "doctor",
-    status: "active",
-    gender: "female"
-  }
-];
-
-const mockServices = [
-  {
-    _id: "68b645f285ec70b6fb783b24",
-    name: "Dental surgery",
-    isEmergencyService: false,
-    departmentId: "68b6303dead27f943db16382"
-  },
-  {
-    _id: "68b645f285ec70b6fb783b25",
-    name: "General Consultation",
-    isEmergencyService: false,
-    departmentId: "68b6303dead27f943db16383"
-  },
-  {
-    _id: "68b645f285ec70b6fb783b26",
-    name: "Emergency Care",
-    isEmergencyService: true,
-    departmentId: "68b6303dead27f943db16382"
-  }
-];
-
-const mockDepartments = [
-  {
-    _id: "68b6303dead27f943db16382",
-    name: "Cardiology Department",
-    description: "Handles heart and cardiovascular care",
-    location: "Building A",
-    isEmergencyService: true
-  },
-  {
-    _id: "68b6303dead27f943db16383",
-    name: "Dental Department",
-    description: "Handles dental care and oral health",
-    location: "Building B",
-    isEmergencyService: false
-  }
-];
+import axios from "axios";
+import { baseUrl } from "@/constants/baseUrl";
 
 interface AppointmentSchedulerProps {
   isOpen: boolean;
@@ -116,7 +42,7 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
   isOpen,
   onClose,
   user,
-  callBack
+  callBack,
 }) => {
   const [formData, setFormData] = useState<FormData>({
     patientId: "",
@@ -126,37 +52,104 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
     date: "",
     time: "",
     status: "scheduled",
-    notes: ""
+    notes: "",
   });
+
+  const [services, setServices] = useState<any[]>([]);
+  const [departments, setDepartments] = useState<any[]>([]);
+  const [doctors, setDoctors] = useState<any[]>([]);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [filteredServices, setFilteredServices] = useState(mockServices);
-  const [filteredStaff, setFilteredStaff] = useState(mockDoctors);
+  const [filteredServices, setFilteredServices] = useState<any[]>([]);
+  const [filteredStaff, setFilteredStaff] = useState<any[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState<any>(null);
 
+  const fetchData = async () => {
+    try {
+      const resServices = await axios.get(`${baseUrl}/api/all-services`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      setServices(resServices?.data);
+
+      const resDepartments = await axios.get(`${baseUrl}/api/all-departments`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      setDepartments(resDepartments?.data);
+
+      const resDoctors = await axios.get(`${baseUrl}/api/role/doctor`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      setDoctors(resDoctors?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const temp = async () => {
+      console.log("entering...");
+      try{
+  const resDepartments = await axios.get(`${baseUrl}/api/all-departments`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      setDepartments(resDepartments?.data);
+      console.log("dept: ", resDepartments?.data);
+      const resServices = await axios.get(`${baseUrl}/api/all-services`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      console.log("services: ", resServices?.data);
+      setServices(resServices?.data);
+
+      const resDoctors = await axios.get(`${baseUrl}/api/role/doctor`, {
+        headers: { Authorization: `Bearer ${user?.token}` },
+      });
+      console.log("doctors: ", resDoctors?.data);
+      setDoctors(resDoctors?.data);
+    }catch (error) {
+      console.log(error);
+    }
+  }
+    
+    temp();
+  }, [user]);
 
   // Filter services and staff based on department selection
   useEffect(() => {
     if (formData.departmentId) {
-      const filtered = mockServices.filter(
-        service => service.departmentId === formData.departmentId
+      // Filter services by department
+      const filtered = services.filter(
+        (service) => service.departmentId === formData.departmentId
       );
       setFilteredServices(filtered);
 
-      const filteredDocs = mockDoctors.filter(
-        doctor => doctor.linkedStaffId.departmentId === formData.departmentId
+      console.log(`Pre: ${doctors}`)
+
+      // Filter doctors by department
+      const filteredDocs = doctors.filter(
+        (doctor) => doctor?.departmentId?._id === formData.departmentId
       );
+
+      console.log(`Poat: ${filteredDocs}`)
+
       setFilteredStaff(filteredDocs);
 
-      const dept = mockDepartments.find(d => d._id === formData.departmentId);
+      // Find the selected department
+      const dept = departments.find((d) => d._id === formData.departmentId);
       setSelectedDepartment(dept);
     } else {
-      setFilteredServices(mockServices);
-      setFilteredStaff(mockDoctors);
+      setFilteredServices(services);
+      setFilteredStaff(doctors);
       setSelectedDepartment(null);
     }
-  }, [formData.departmentId]);
+  }, [formData.departmentId, services, doctors, departments]);
+
+  useEffect(() => {
+    if (user?.id) {
+      setFormData((prev) => ({ ...prev, patientId: user.id }));
+    }
+  }, [user]);
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
@@ -164,7 +157,8 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
     if (!formData.patientId) newErrors.patientId = "Patient is required";
     if (!formData.serviceId) newErrors.serviceId = "Service is required";
     if (!formData.staffId) newErrors.staffId = "Staff member is required";
-    if (!formData.departmentId) newErrors.departmentId = "Department is required";
+    if (!formData.departmentId)
+      newErrors.departmentId = "Department is required";
     if (!formData.date) newErrors.date = "Date is required";
     if (!formData.time) newErrors.time = "Time is required";
 
@@ -173,7 +167,7 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
       const selectedDate = new Date(formData.date);
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      
+
       if (selectedDate < today) {
         newErrors.date = "Please select a future date";
       }
@@ -184,19 +178,19 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
   };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
 
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: "" }));
+      setErrors((prev) => ({ ...prev, [field]: "" }));
     }
 
     // Reset dependent fields when department changes
     if (field === "departmentId") {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         serviceId: "",
-        staffId: ""
+        staffId: "",
       }));
     }
   };
@@ -211,25 +205,23 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
       const appointmentDateTime = `${formData.date}T${formData.time}:00`;
 
       const appointmentData = {
-        patientId: formData.patientId,
+        patientId: user?.id,
         serviceId: formData.serviceId,
         staffId: formData.staffId,
         departmentId: formData.departmentId,
         time: appointmentDateTime,
         status: formData.status,
-        notes: formData.notes || undefined
+        notes: formData.notes || undefined,
       };
 
       console.log("Appointment Data to be sent:", appointmentData);
+      await axios.post(`${baseUrl}/api/create-appointment`, appointmentData, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+        },
+      });
 
-      // Call the onSubmit prop or make API call here
-      if (onSubmit) {
-        await onSubmit(appointmentData);
-      } else {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        alert("Appointment scheduled successfully!");
-      }
+      await callBack();
 
       // Reset form and close modal
       setFormData({
@@ -240,7 +232,7 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
         date: "",
         time: "",
         status: "scheduled",
-        notes: ""
+        notes: "",
       });
       setErrors({});
       onClose();
@@ -260,18 +252,20 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
       date: "",
       time: "",
       status: "scheduled",
-      notes: ""
+      notes: "",
     });
     setErrors({});
     onClose();
   };
 
   const getSelectedStaff = () => {
-    return filteredStaff.find(staff => staff._id === formData.staffId);
+    return filteredStaff.find((staff) => staff._id === formData.staffId);
   };
 
   const getSelectedService = () => {
-    return filteredServices.find(service => service._id === formData.serviceId);
+    return filteredServices.find(
+      (service) => service._id === formData.serviceId
+    );
   };
 
   if (!isOpen) return null;
@@ -302,7 +296,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                 <FiCalendar className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Schedule Appointment</h2>
+                <h2 className="text-2xl font-bold text-white">
+                  Schedule Appointment
+                </h2>
                 <p className="text-blue-100 text-sm">
                   Book a new patient appointment
                 </p>
@@ -330,7 +326,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Patient Selection */}
-                
 
                 {/* Department Selection */}
                 <div className="space-y-2">
@@ -343,7 +338,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     </div>
                     <select
                       value={formData.departmentId}
-                      onChange={(e) => handleInputChange("departmentId", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("departmentId", e.target.value)
+                      }
                       className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 appearance-none ${
                         errors.departmentId
                           ? "border-red-300 focus:border-red-500 bg-red-50"
@@ -351,7 +348,7 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                       }`}
                     >
                       <option value="">Select department</option>
-                      {mockDepartments.map((dept) => (
+                      {departments.map((dept) => (
                         <option key={dept._id} value={dept._id}>
                           {dept.name} - {dept.location}
                         </option>
@@ -375,8 +372,12 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                       <FaBuilding className="w-4 h-4 text-blue-600" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-blue-900">{selectedDepartment.name}</h4>
-                      <p className="text-sm text-blue-700 mt-1">{selectedDepartment.description}</p>
+                      <h4 className="font-semibold text-blue-900">
+                        {selectedDepartment.name}
+                      </h4>
+                      <p className="text-sm text-blue-700 mt-1">
+                        {selectedDepartment.description}
+                      </p>
                       <div className="flex items-center space-x-4 mt-2">
                         <span className="flex items-center text-sm text-blue-600">
                           <FiMapPin className="w-4 h-4 mr-1" />
@@ -413,7 +414,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     </div>
                     <select
                       value={formData.serviceId}
-                      onChange={(e) => handleInputChange("serviceId", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("serviceId", e.target.value)
+                      }
                       className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 appearance-none ${
                         errors.serviceId
                           ? "border-red-300 focus:border-red-500 bg-red-50"
@@ -422,7 +425,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                       disabled={!formData.departmentId}
                     >
                       <option value="">
-                        {formData.departmentId ? "Choose service" : "Select department first"}
+                        {formData.departmentId
+                          ? "Choose service"
+                          : "Select department first"}
                       </option>
                       {filteredServices.map((service) => (
                         <option key={service._id} value={service._id}>
@@ -451,7 +456,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     </div>
                     <select
                       value={formData.staffId}
-                      onChange={(e) => handleInputChange("staffId", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("staffId", e.target.value)
+                      }
                       className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 appearance-none ${
                         errors.staffId
                           ? "border-red-300 focus:border-red-500 bg-red-50"
@@ -460,7 +467,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                       disabled={!formData.departmentId}
                     >
                       <option value="">
-                        {formData.departmentId ? "Choose doctor" : "Select department first"}
+                        {formData.departmentId
+                          ? "Choose doctor"
+                          : "Select department first"}
                       </option>
                       {filteredStaff.map((staff) => (
                         <option key={staff._id} value={staff._id}>
@@ -488,20 +497,30 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center space-x-3">
-                        <h4 className="font-semibold text-blue-900">{getSelectedStaff()?.name}</h4>
-                        <span className={`px-2 py-1 text-xs rounded-full font-medium ${
-                          getSelectedStaff()?.linkedStaffId.isAvailable 
-                            ? "bg-green-100 text-green-700" 
-                            : "bg-red-100 text-red-700"
-                        }`}>
-                          {getSelectedStaff()?.linkedStaffId.isAvailable ? "Available" : "Unavailable"}
+                        <h4 className="font-semibold text-blue-900">
+                          {getSelectedStaff()?.name}
+                        </h4>
+                        <span
+                          className={`px-2 py-1 text-xs rounded-full font-medium ${
+                            getSelectedStaff()?.linkedStaffId.isAvailable
+                              ? "bg-green-100 text-green-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {getSelectedStaff()?.linkedStaffId.isAvailable
+                            ? "Available"
+                            : "Unavailable"}
                         </span>
                       </div>
                       <p className="text-sm text-blue-700 mt-1">
-                        Specialties: {getSelectedStaff()?.linkedStaffId.specialties.join(", ")}
+                        Specialties:{" "}
+                        {getSelectedStaff()?.linkedStaffId.specialties.join(
+                          ", "
+                        )}
                       </p>
                       <p className="text-sm text-blue-600 mt-1">
-                        Email: {getSelectedStaff()?.email} | Phone: {getSelectedStaff()?.phone}
+                        Email: {getSelectedStaff()?.email} | Phone:{" "}
+                        {getSelectedStaff()?.phone}
                       </p>
                     </div>
                   </div>
@@ -529,8 +548,10 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     <input
                       type="date"
                       value={formData.date}
-                      onChange={(e) => handleInputChange("date", e.target.value)}
-                      min={new Date().toISOString().split('T')[0]}
+                      onChange={(e) =>
+                        handleInputChange("date", e.target.value)
+                      }
+                      min={new Date().toISOString().split("T")[0]}
                       className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
                         errors.date
                           ? "border-red-300 focus:border-red-500 bg-red-50"
@@ -558,7 +579,9 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     <input
                       type="time"
                       value={formData.time}
-                      onChange={(e) => handleInputChange("time", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("time", e.target.value)
+                      }
                       className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
                         errors.time
                           ? "border-red-300 focus:border-red-500 bg-red-50"
@@ -631,24 +654,28 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
             </div>
 
             {/* Summary Card */}
-            {(formData.patientId && formData.serviceId && formData.staffId && formData.date && formData.time) && (
-              <div className="bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-2xl p-6 mt-6">
-                <h4 className="text-lg font-bold text-emerald-900 mb-4 flex items-center space-x-2">
-                  <FiCheckCircle className="w-5 h-5" />
-                  <span>Appointment Summary</span>
-                </h4>
+            {formData.patientId &&
+              formData.serviceId &&
+              formData.staffId &&
+              formData.date &&
+              formData.time && (
+                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-2xl p-6 mt-6">
+                  <h4 className="text-lg font-bold text-emerald-900 mb-4 flex items-center space-x-2">
+                    <FiCheckCircle className="w-5 h-5" />
+                    <span>Appointment Summary</span>
+                  </h4>
 
-                {formData.notes && (
-                  <div className="bg-white rounded-lg p-4 shadow-sm mt-4">
-                    <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
-                      <FiFileText className="w-4 h-4" />
-                      <span>Notes</span>
+                  {formData.notes && (
+                    <div className="bg-white rounded-lg p-4 shadow-sm mt-4">
+                      <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
+                        <FiFileText className="w-4 h-4" />
+                        <span>Notes</span>
+                      </div>
+                      <p className="text-gray-900">{formData.notes}</p>
                     </div>
-                    <p className="text-gray-900">{formData.notes}</p>
-                  </div>
-                )}
-              </div>
-            )}
+                  )}
+                </div>
+              )}
           </div>
         </div>
       </div>
@@ -656,70 +683,4 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
   );
 };
 
-// Example usage component
-const AppointmentSchedulerDemo = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const mockUser = {
-    name: "Admin User",
-    id: "admin123",
-    email: "admin@hospital.com",
-    token: "mock-token-123"
-  };
-
-  const handleAppointmentSubmit = async (appointmentData: any) => {
-    console.log("Appointment data to send to API:", appointmentData);
-    // Here you would make your actual API call
-    // Example:
-    // await axios.post(`${baseUrl}/api/appointments`, appointmentData, {
-    //   headers: { Authorization: `Bearer ${mockUser.token}` }
-    // });
-  };
-
-  return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-2xl shadow-lg p-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">
-            Appointment Management System
-          </h1>
-          <p className="text-gray-600 mb-8">
-            Click the button below to open the appointment scheduler modal.
-          </p>
-          
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition-all duration-200 hover:scale-105 flex items-center space-x-2"
-          >
-            <FiCalendar className="w-5 h-5" />
-            <span>Schedule New Appointment</span>
-          </button>
-
-          <div className="mt-8 bg-gray-50 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 mb-2">Data Format:</h3>
-            <pre className="text-xs text-gray-600 overflow-x-auto">
-{`{
-  patientId: "patient1",
-  serviceId: "68b645f285ec70b6fb783b24", 
-  staffId: "68b63e75f1a7db883e78a648",
-  departmentId: "68b6303dead27f943db16382",
-  time: "2025-09-03T10:30:00",
-  status: "scheduled",
-  notes: "Optional notes here"
-}`}
-            </pre>
-          </div>
-        </div>
-
-        <AppointmentScheduler
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          user={mockUser}
-          onSubmit={handleAppointmentSubmit}
-        />
-      </div>
-    </div>
-  );
-};
-
-export default AppointmentSchedulerDemo;
+export default AppointmentScheduler;
