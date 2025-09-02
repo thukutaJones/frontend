@@ -4,6 +4,7 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 import AddUserModal from "@/components/userManagement/AddUserModal";
 import Demo from "@/components/userManagement/AddUserModal";
 import EditAddUserModal from "@/components/userManagement/EditAddUserModal";
+import EditUserModal from "@/components/userManagement/EditModal";
 import Header from "@/components/userManagement/Header";
 import UsersTable from "@/components/userManagement/UsersTable";
 import { baseUrl } from "@/constants/baseUrl";
@@ -61,6 +62,9 @@ const page = () => {
       const res = await axios.get(`${baseUrl}/api/allusers`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
+          "Chace-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+          Expires: "0",
         },
       });
       setUsers(res.data);
@@ -96,16 +100,31 @@ const page = () => {
           openAddModal={openAddModal}
           handleAddUser={() => setAddUserModal(true)}
         />
-        <UsersTable users={filteredUsers} openEditModal={openEditModal} />
+        <UsersTable
+          users={filteredUsers}
+          openEditModal={openEditModal}
+          callBack={fetchUsers}
+          user_={user}
+        />
 
         {showModal && (
+          <EditUserModal
+            onClose={closeModal}
+            isOpen={showModal}
+            user={user}
+            callack={fetchUsers}
+            userData={editingUser}
+          />
+        )}
+
+        {/* {showModal && (
           <EditAddUserModal
             editingUser={editingUser}
             closeModal={closeModal}
             formData={formData}
             setFormData={setFormData}
           />
-        )}
+        )} */}
         {addUserModal && (
           <AddUserModal
             onClose={() => setAddUserModal(false)}

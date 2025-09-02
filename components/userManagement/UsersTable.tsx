@@ -12,17 +12,31 @@ import {
   FiActivity,
   FiMapPin,
   FiUserX,
-  FiUserCheck
+  FiUserCheck,
 } from "react-icons/fi";
+import FastBouncingDots from "../BouncingAnimation";
+import { baseUrl } from "@/constants/baseUrl";
+import axios from "axios";
 
 const UsersTable = ({
   users = [],
   openEditModal,
+  user_,
+  callBack,
 }: {
   users: any[];
   openEditModal: any;
+  user_: {
+    id: string;
+    name: string;
+    role: string;
+    email: string;
+    token: string;
+  };
+  callBack: any;
 }) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [isChangingStatus, setIsChangingStatus] = useState<string>("");
 
   const toggleRowExpansion = (userId: string) => {
     const newExpanded = new Set(expandedRows);
@@ -34,9 +48,24 @@ const UsersTable = ({
     setExpandedRows(newExpanded);
   };
 
-  const toggleUserStatus = (userId: string) => {
-    // Implementation would go here
-    console.log("Toggle status for user:", userId);
+  const toggleUserStatus = async (userId: string) => {
+    try {
+      setIsChangingStatus(userId);
+      await axios.put(
+        `${baseUrl}/api/changeStatus/${userId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user_?.token}`,
+          },
+        }
+      );
+      await callBack();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsChangingStatus("");
+    }
   };
 
   return (
@@ -116,7 +145,9 @@ const UsersTable = ({
                     </span>
                   </td>
                   <td className="px-6 py-5 text-sm text-gray-600 font-medium">
-                    {user?.createdAt ? new Date(user.createdAt).toDateString() : "--"}
+                    {user?.createdAt
+                      ? new Date(user.createdAt).toDateString()
+                      : "--"}
                   </td>
                   <td className="px-6 py-5">
                     <div className="flex items-center gap-3">
@@ -151,7 +182,23 @@ const UsersTable = ({
                           user?.status === "active" ? "Deactivate" : "Activate"
                         }
                       >
-                        {user?.status === "active" ? (
+                        {isChangingStatus === user?.id ? (
+                          <div className="flex items-center justify-center space-x-1">
+                            <span
+                              className={`w-2 h-2 ${
+                                user?.status === "active"
+                                  ? "bg-green-900"
+                                  : "bg-red-900"
+                              }  rounded-full bounce-fast`}
+                              style={{ animationDelay: "-0.2s" }}
+                            ></span>
+                            <span
+                              className="w-2 h-2 bg-blue-900 rounded-full bounce-fast"
+                              style={{ animationDelay: "-0.1s" }}
+                            ></span>
+                            <span className="w-2 h-2 bg-white rounded-full bounce-fast"></span>
+                          </div>
+                        ) : user?.status === "active" ? (
                           <FiUserX className="w-5 h-5" />
                         ) : (
                           <FiUserCheck className="w-5 h-5" />
@@ -188,27 +235,46 @@ const UsersTable = ({
                                     </span>
                                     <div className="text-gray-600 space-y-1">
                                       {user.linkedPatientId.address.line1 && (
-                                        <div>{user.linkedPatientId.address.line1}</div>
+                                        <div>
+                                          {user.linkedPatientId.address.line1}
+                                        </div>
                                       )}
                                       {user.linkedPatientId.address.line2 && (
-                                        <div>{user.linkedPatientId.address.line2}</div>
+                                        <div>
+                                          {user.linkedPatientId.address.line2}
+                                        </div>
                                       )}
                                       {user.linkedPatientId.address.city && (
-                                        <div>{user.linkedPatientId.address.city}</div>
+                                        <div>
+                                          {user.linkedPatientId.address.city}
+                                        </div>
                                       )}
                                       {user.linkedPatientId.address.region && (
-                                        <div>{user.linkedPatientId.address.region}</div>
+                                        <div>
+                                          {user.linkedPatientId.address.region}
+                                        </div>
                                       )}
-                                      {user.linkedPatientId.address.postalCode && (
-                                        <div>{user.linkedPatientId.address.postalCode}</div>
+                                      {user.linkedPatientId.address
+                                        .postalCode && (
+                                        <div>
+                                          {
+                                            user.linkedPatientId.address
+                                              .postalCode
+                                          }
+                                        </div>
                                       )}
                                       {user.linkedPatientId.district && (
-                                        <div>District: {user.linkedPatientId.district}</div>
+                                        <div>
+                                          District:{" "}
+                                          {user.linkedPatientId.district}
+                                        </div>
                                       )}
-                                      {!user.linkedPatientId.address.line1 && 
-                                       !user.linkedPatientId.district && (
-                                        <span className="text-gray-400 italic">No address provided</span>
-                                      )}
+                                      {!user.linkedPatientId.address.line1 &&
+                                        !user.linkedPatientId.district && (
+                                          <span className="text-gray-400 italic">
+                                            No address provided
+                                          </span>
+                                        )}
                                     </div>
                                   </div>
                                 </div>
@@ -227,19 +293,44 @@ const UsersTable = ({
                                       Emergency Contact
                                     </span>
                                     <div className="text-gray-600 space-y-1">
-                                      {user.linkedPatientId.emergencyContact.name && (
-                                        <div>Name: {user.linkedPatientId.emergencyContact.name}</div>
+                                      {user.linkedPatientId.emergencyContact
+                                        .name && (
+                                        <div>
+                                          Name:{" "}
+                                          {
+                                            user.linkedPatientId
+                                              .emergencyContact.name
+                                          }
+                                        </div>
                                       )}
-                                      {user.linkedPatientId.emergencyContact.phone && (
-                                        <div>Phone: {user.linkedPatientId.emergencyContact.phone}</div>
+                                      {user.linkedPatientId.emergencyContact
+                                        .phone && (
+                                        <div>
+                                          Phone:{" "}
+                                          {
+                                            user.linkedPatientId
+                                              .emergencyContact.phone
+                                          }
+                                        </div>
                                       )}
-                                      {user.linkedPatientId.emergencyContact.relation && (
-                                        <div>Relation: {user.linkedPatientId.emergencyContact.relation}</div>
+                                      {user.linkedPatientId.emergencyContact
+                                        .relation && (
+                                        <div>
+                                          Relation:{" "}
+                                          {
+                                            user.linkedPatientId
+                                              .emergencyContact.relation
+                                          }
+                                        </div>
                                       )}
-                                      {!user.linkedPatientId.emergencyContact.name && 
-                                       !user.linkedPatientId.emergencyContact.phone && (
-                                        <span className="text-gray-400 italic">No emergency contact provided</span>
-                                      )}
+                                      {!user.linkedPatientId.emergencyContact
+                                        .name &&
+                                        !user.linkedPatientId.emergencyContact
+                                          .phone && (
+                                          <span className="text-gray-400 italic">
+                                            No emergency contact provided
+                                          </span>
+                                        )}
                                     </div>
                                   </div>
                                 </div>
@@ -258,7 +349,8 @@ const UsersTable = ({
                                   <span className="font-semibold text-gray-700 block mb-2">
                                     Medical Conditions
                                   </span>
-                                  {user.linkedPatientId.conditions?.length > 0 ? (
+                                  {user.linkedPatientId.conditions?.length >
+                                  0 ? (
                                     <div className="flex flex-wrap gap-2">
                                       {user.linkedPatientId.conditions.map(
                                         (condition: any, idx: number) => (
@@ -272,7 +364,9 @@ const UsersTable = ({
                                       )}
                                     </div>
                                   ) : (
-                                    <span className="text-gray-400 italic">No conditions recorded</span>
+                                    <span className="text-gray-400 italic">
+                                      No conditions recorded
+                                    </span>
                                   )}
                                 </div>
                               </div>
@@ -289,7 +383,9 @@ const UsersTable = ({
                                     Medical Records
                                   </span>
                                   <span className="text-gray-600">
-                                    {user.linkedPatientId.medicalRecords?.length || 0} records
+                                    {user.linkedPatientId.medicalRecords
+                                      ?.length || 0}{" "}
+                                    records
                                   </span>
                                 </div>
                               </div>
@@ -305,23 +401,29 @@ const UsersTable = ({
                                 <FiUser className="w-4 h-4 text-indigo-600" />
                               </div>
                               <div>
-                                <span className="font-semibold text-gray-700 block">Gender</span>
+                                <span className="font-semibold text-gray-700 block">
+                                  Gender
+                                </span>
                                 <span className="text-gray-600 capitalize">
                                   {user.gender || "Not specified"}
                                 </span>
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
                             <div className="flex items-center gap-3 text-sm">
                               <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
                                 <FiClock className="w-4 h-4 text-yellow-600" />
                               </div>
                               <div>
-                                <span className="font-semibold text-gray-700 block">Date of Birth</span>
+                                <span className="font-semibold text-gray-700 block">
+                                  Date of Birth
+                                </span>
                                 <span className="text-gray-600">
-                                  {user.dob ? new Date(user.dob).toDateString() : "Not provided"}
+                                  {user.dob
+                                    ? new Date(user.dob).toDateString()
+                                    : "Not provided"}
                                 </span>
                               </div>
                             </div>
@@ -333,7 +435,9 @@ const UsersTable = ({
                                 <FiActivity className="w-4 h-4 text-teal-600" />
                               </div>
                               <div>
-                                <span className="font-semibold text-gray-700 block">Language</span>
+                                <span className="font-semibold text-gray-700 block">
+                                  Language
+                                </span>
                                 <span className="text-gray-600 uppercase">
                                   {user.preferredLanguage || "Not set"}
                                 </span>

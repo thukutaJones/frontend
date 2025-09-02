@@ -7,7 +7,7 @@ const Stats = ({ stats }: { stats: any }) => {
   const dashboardDatad = dashboardCardData[role] || [];
   return (
     <div className="mt-4 w-full">
-      <div className="w-full grid grid-cols-4 gap-2">
+      <div className="w-full flex flex-col md:grid md:grid-cols-4 gap-2">
         {dashboardDatad?.map((item: any, index: number) => (
           <DashboardCard
             key={index?.toString()}

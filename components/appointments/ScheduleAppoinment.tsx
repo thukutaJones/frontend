@@ -3,18 +3,14 @@ import {
   FiX,
   FiCalendar,
   FiClock,
-  FiUser,
-  FiUserCheck,
-  FiMapPin,
   FiSave,
   FiAlertCircle,
   FiFileText,
   FiActivity,
-  FiCheckCircle,
 } from "react-icons/fi";
-import { FaBuilding, FaUserMd, FaStethoscope } from "react-icons/fa";
 import axios from "axios";
 import { baseUrl } from "@/constants/baseUrl";
+import { RiCloseLine } from "react-icons/ri";
 
 interface AppointmentSchedulerProps {
   isOpen: boolean;
@@ -26,8 +22,6 @@ interface AppointmentSchedulerProps {
 interface FormData {
   patientId: string;
   serviceId: string;
-  staffId: string;
-  departmentId: string;
   date: string;
   time: string;
   status: string;
@@ -47,8 +41,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
   const [formData, setFormData] = useState<FormData>({
     patientId: "",
     serviceId: "",
-    staffId: "",
-    departmentId: "",
     date: "",
     time: "",
     status: "scheduled",
@@ -56,14 +48,10 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
   });
 
   const [services, setServices] = useState<any[]>([]);
-  const [departments, setDepartments] = useState<any[]>([]);
-  const [doctors, setDoctors] = useState<any[]>([]);
 
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [filteredServices, setFilteredServices] = useState<any[]>([]);
-  const [filteredStaff, setFilteredStaff] = useState<any[]>([]);
-  const [selectedDepartment, setSelectedDepartment] = useState<any>(null);
+  const [formError, setFormError] = useState<string>("");
 
   const fetchData = async () => {
     try {
@@ -71,16 +59,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
         headers: { Authorization: `Bearer ${user?.token}` },
       });
       setServices(resServices?.data);
-
-      const resDepartments = await axios.get(`${baseUrl}/api/all-departments`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
-      setDepartments(resDepartments?.data);
-
-      const resDoctors = await axios.get(`${baseUrl}/api/role/doctor`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
-      setDoctors(resDoctors?.data);
     } catch (error) {
       console.log(error);
     }
@@ -88,62 +66,7 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
 
   useEffect(() => {
     fetchData();
-    const temp = async () => {
-      console.log("entering...");
-      try{
-  const resDepartments = await axios.get(`${baseUrl}/api/all-departments`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
-      setDepartments(resDepartments?.data);
-      console.log("dept: ", resDepartments?.data);
-      const resServices = await axios.get(`${baseUrl}/api/all-services`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
-      console.log("services: ", resServices?.data);
-      setServices(resServices?.data);
-
-      const resDoctors = await axios.get(`${baseUrl}/api/role/doctor`, {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
-      console.log("doctors: ", resDoctors?.data);
-      setDoctors(resDoctors?.data);
-    }catch (error) {
-      console.log(error);
-    }
-  }
-    
-    temp();
   }, [user]);
-
-  // Filter services and staff based on department selection
-  useEffect(() => {
-    if (formData.departmentId) {
-      // Filter services by department
-      const filtered = services.filter(
-        (service) => service.departmentId === formData.departmentId
-      );
-      setFilteredServices(filtered);
-
-      console.log(`Pre: ${doctors}`)
-
-      // Filter doctors by department
-      const filteredDocs = doctors.filter(
-        (doctor) => doctor?.departmentId?._id === formData.departmentId
-      );
-
-      console.log(`Poat: ${filteredDocs}`)
-
-      setFilteredStaff(filteredDocs);
-
-      // Find the selected department
-      const dept = departments.find((d) => d._id === formData.departmentId);
-      setSelectedDepartment(dept);
-    } else {
-      setFilteredServices(services);
-      setFilteredStaff(doctors);
-      setSelectedDepartment(null);
-    }
-  }, [formData.departmentId, services, doctors, departments]);
 
   useEffect(() => {
     if (user?.id) {
@@ -156,9 +79,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
 
     if (!formData.patientId) newErrors.patientId = "Patient is required";
     if (!formData.serviceId) newErrors.serviceId = "Service is required";
-    if (!formData.staffId) newErrors.staffId = "Staff member is required";
-    if (!formData.departmentId)
-      newErrors.departmentId = "Department is required";
     if (!formData.date) newErrors.date = "Date is required";
     if (!formData.time) newErrors.time = "Time is required";
 
@@ -184,21 +104,13 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: "" }));
     }
-
-    // Reset dependent fields when department changes
-    if (field === "departmentId") {
-      setFormData((prev) => ({
-        ...prev,
-        serviceId: "",
-        staffId: "",
-      }));
-    }
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
     setIsSubmitting(true);
+    setFormError("");
 
     try {
       // Combine date and time for the appointment
@@ -207,8 +119,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
       const appointmentData = {
         patientId: user?.id,
         serviceId: formData.serviceId,
-        staffId: formData.staffId,
-        departmentId: formData.departmentId,
         time: appointmentDateTime,
         status: formData.status,
         notes: formData.notes || undefined,
@@ -227,8 +137,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
       setFormData({
         patientId: "",
         serviceId: "",
-        staffId: "",
-        departmentId: "",
         date: "",
         time: "",
         status: "scheduled",
@@ -236,8 +144,11 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
       });
       setErrors({});
       onClose();
-    } catch (error) {
-      console.error("Error scheduling appointment:", error);
+    } catch (error: any) {
+      console.log("Error scheduling appointment:", error);
+      setFormError(
+        error?.response?.data?.error || "Error scheduling appointment"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -247,8 +158,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
     setFormData({
       patientId: "",
       serviceId: "",
-      staffId: "",
-      departmentId: "",
       date: "",
       time: "",
       status: "scheduled",
@@ -256,16 +165,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
     });
     setErrors({});
     onClose();
-  };
-
-  const getSelectedStaff = () => {
-    return filteredStaff.find((staff) => staff._id === formData.staffId);
-  };
-
-  const getSelectedService = () => {
-    return filteredServices.find(
-      (service) => service._id === formData.serviceId
-    );
   };
 
   if (!isOpen) return null;
@@ -314,99 +213,30 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
           </div>
         </div>
 
+        {formError && (
+          <div className="px-8 mt-4">
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-4 animate-in slide-in-from-top-4 fade-in duration-300">
+              <div className="flex items-center space-x-3">
+                <RiCloseLine
+                  className="w-5 h-5 text-red-500 flex-shrink-0"
+                  onClick={() => setFormError("")}
+                />
+                <p className="text-red-700 text-sm font-medium">{formError}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Form Content */}
         <div className="p-8 max-h-[calc(95vh-120px)] overflow-y-auto">
-          <div className="space-y-8">
-            {/* Patient & Department Selection */}
-            <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-2 flex items-center space-x-2">
-                <FiUser className="w-5 h-5 text-blue-600" />
-                <span>Patient & Department</span>
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Patient Selection */}
-
-                {/* Department Selection */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Department
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <FaBuilding className="w-5 h-5 text-gray-400" />
-                    </div>
-                    <select
-                      value={formData.departmentId}
-                      onChange={(e) =>
-                        handleInputChange("departmentId", e.target.value)
-                      }
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 appearance-none ${
-                        errors.departmentId
-                          ? "border-red-300 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500 hover:border-gray-300"
-                      }`}
-                    >
-                      <option value="">Select department</option>
-                      {departments.map((dept) => (
-                        <option key={dept._id} value={dept._id}>
-                          {dept.name} - {dept.location}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {errors.departmentId && (
-                    <div className="flex items-center space-x-2 text-red-600 text-sm">
-                      <FiAlertCircle className="w-4 h-4" />
-                      <span>{errors.departmentId}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Department Info Display */}
-              {selectedDepartment && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <FaBuilding className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-blue-900">
-                        {selectedDepartment.name}
-                      </h4>
-                      <p className="text-sm text-blue-700 mt-1">
-                        {selectedDepartment.description}
-                      </p>
-                      <div className="flex items-center space-x-4 mt-2">
-                        <span className="flex items-center text-sm text-blue-600">
-                          <FiMapPin className="w-4 h-4 mr-1" />
-                          {selectedDepartment.location}
-                        </span>
-                        {selectedDepartment.isEmergencyService && (
-                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">
-                            Emergency Service Available
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
+          <div className="space-y-4">
             {/* Service & Staff Selection */}
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-2 flex items-center space-x-2">
-                <FaStethoscope className="w-5 h-5 text-emerald-600" />
-                <span>Appointment details</span>
-              </h3>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Service Selection */}
                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700">
-                    Service Type
+                    Service
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -422,17 +252,12 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                           ? "border-red-300 focus:border-red-500 bg-red-50"
                           : "border-gray-200 focus:border-blue-500 hover:border-gray-300"
                       }`}
-                      disabled={!formData.departmentId}
                     >
-                      <option value="">
-                        {formData.departmentId
-                          ? "Choose service"
-                          : "Select department first"}
-                      </option>
-                      {filteredServices.map((service) => (
-                        <option key={service._id} value={service._id}>
+                      <option value="">Choose service</option>
+                      {services.map((service, index) => (
+                        <option key={index?.toString()} value={service._id}>
                           {service.name}
-                          {service.isEmergencyService && " (Emergency)"}
+                          {service.isEmergencyService && "(Emergency)"}
                         </option>
                       ))}
                     </select>
@@ -444,97 +269,11 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                     </div>
                   )}
                 </div>
-
-                {/* Staff Selection */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-semibold text-gray-700">
-                    Doctor
-                  </label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <FaUserMd className="w-5 h-5 text-gray-400" />
-                    </div>
-                    <select
-                      value={formData.staffId}
-                      onChange={(e) =>
-                        handleInputChange("staffId", e.target.value)
-                      }
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 appearance-none ${
-                        errors.staffId
-                          ? "border-red-300 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500 hover:border-gray-300"
-                      }`}
-                      disabled={!formData.departmentId}
-                    >
-                      <option value="">
-                        {formData.departmentId
-                          ? "Choose doctor"
-                          : "Select department first"}
-                      </option>
-                      {filteredStaff.map((staff) => (
-                        <option key={staff._id} value={staff._id}>
-                          {staff.name}
-                          {!staff.linkedStaffId.isAvailable && " (Unavailable)"}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  {errors.staffId && (
-                    <div className="flex items-center space-x-2 text-red-600 text-sm">
-                      <FiAlertCircle className="w-4 h-4" />
-                      <span>{errors.staffId}</span>
-                    </div>
-                  )}
-                </div>
               </div>
-
-              {/* Selected Staff Info */}
-              {getSelectedStaff() && (
-                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <FaUserMd className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-3">
-                        <h4 className="font-semibold text-blue-900">
-                          {getSelectedStaff()?.name}
-                        </h4>
-                        <span
-                          className={`px-2 py-1 text-xs rounded-full font-medium ${
-                            getSelectedStaff()?.linkedStaffId.isAvailable
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {getSelectedStaff()?.linkedStaffId.isAvailable
-                            ? "Available"
-                            : "Unavailable"}
-                        </span>
-                      </div>
-                      <p className="text-sm text-blue-700 mt-1">
-                        Specialties:{" "}
-                        {getSelectedStaff()?.linkedStaffId.specialties.join(
-                          ", "
-                        )}
-                      </p>
-                      <p className="text-sm text-blue-600 mt-1">
-                        Email: {getSelectedStaff()?.email} | Phone:{" "}
-                        {getSelectedStaff()?.phone}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Date & Time Selection */}
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-2 flex items-center space-x-2">
-                <FiClock className="w-5 h-5 text-blue-600" />
-                <span>Date & Time</span>
-              </h3>
-
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Date Selection */}
                 <div className="space-y-2">
@@ -601,11 +340,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
 
             {/* Notes Section */}
             <div className="space-y-6">
-              <h3 className="text-lg font-bold text-gray-900 border-b border-gray-200 pb-2 flex items-center space-x-2">
-                <FiFileText className="w-5 h-5 text-emerald-600" />
-                <span>Additional Information</span>
-              </h3>
-
               <div className="space-y-2">
                 <label className="block text-sm font-semibold text-gray-700">
                   Notes (Optional)
@@ -637,7 +371,7 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
               <button
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="px-8 py-3 bg-emerald-900 hover:bg-emerald-800 text-white rounded-xl font-semibold transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed flex items-center space-x-2"
+                className="px-8 py-3 bg-blue-900 hover:bg-blue-800 text-white rounded-xl font-semibold transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed flex items-center space-x-2"
               >
                 {isSubmitting ? (
                   <>
@@ -652,30 +386,6 @@ const AppointmentScheduler: React.FC<AppointmentSchedulerProps> = ({
                 )}
               </button>
             </div>
-
-            {/* Summary Card */}
-            {formData.patientId &&
-              formData.serviceId &&
-              formData.staffId &&
-              formData.date &&
-              formData.time && (
-                <div className="bg-gradient-to-r from-emerald-50 to-blue-50 border-2 border-emerald-200 rounded-2xl p-6 mt-6">
-                  <h4 className="text-lg font-bold text-emerald-900 mb-4 flex items-center space-x-2">
-                    <FiCheckCircle className="w-5 h-5" />
-                    <span>Appointment Summary</span>
-                  </h4>
-
-                  {formData.notes && (
-                    <div className="bg-white rounded-lg p-4 shadow-sm mt-4">
-                      <div className="flex items-center space-x-2 text-sm text-gray-600 mb-2">
-                        <FiFileText className="w-4 h-4" />
-                        <span>Notes</span>
-                      </div>
-                      <p className="text-gray-900">{formData.notes}</p>
-                    </div>
-                  )}
-                </div>
-              )}
           </div>
         </div>
       </div>

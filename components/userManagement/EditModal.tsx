@@ -22,11 +22,12 @@ interface Department {
   isEmergencyService: boolean;
 }
 
-interface AddUserModalProps {
+interface EditUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   user: { name: string; id: string; email: string; token: string };
   callack: () => void;
+  userData: any;
 }
 
 interface FormData {
@@ -44,21 +45,22 @@ interface FormErrors {
   [key: string]: string;
 }
 
-const AddUserModal: React.FC<AddUserModalProps> = ({
+const EditUserModal: React.FC<EditUserModalProps> = ({
   isOpen,
   onClose,
   user,
   callack,
+  userData
 }) => {
   const [formData, setFormData] = useState<FormData>({
-    name: "",
-    username: "",
-    role: "",
-    dateOfBirth: "",
-    email: "",
-    phone: "",
-    gender: "",
-    department: "",
+    name: userData?.name,
+    username: userData?.username,
+    role: userData?.role,
+    dateOfBirth: userData?.dod || "",
+    email: userData?.email,
+    phone: userData?.phone,
+    gender: userData?.gender,
+    department: userData?.departmentId,
   });
   const [departments, setDepartments] = useState<any[]>([]);
 
@@ -96,16 +98,6 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
       newErrors.name = "Name must be at least 2 characters";
     }
 
-    // Username validation
-    if (!formData.username.trim()) {
-      newErrors.username = "Username is required";
-    } else if (formData.username.length < 3) {
-      newErrors.username = "Username must be at least 3 characters";
-    } else if (!/^[a-zA-Z0-9_]+$/.test(formData.username)) {
-      newErrors.username =
-        "Username can only contain letters, numbers, and underscores";
-    }
-
     // Role validation
     if (!formData.role) {
       newErrors.role = "Role is required";
@@ -127,7 +119,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
     }
 
     // Phone validation
-    if (formData?.phone && !/^[0-9+\-\s()]+$/.test(formData.phone)) {
+    if (!/^[0-9+\-\s()]+$/.test(formData.phone)) {
       newErrors.phone = "Please enter a valid phone number";
     }
 
@@ -196,7 +188,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
           : undefined,
       };
 
-      await axios.post(`${baseUrl}/api/create-user`, formData, {
+      await axios.put(`${baseUrl}/api/updateuser/${userData?._id}`, formData, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },
@@ -213,7 +205,7 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
         gender: "",
         department: "",
       });
-      await callack();
+      await callack()
       setErrors({});
       onClose();
     } catch (error) {
@@ -266,9 +258,9 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 <FiUser className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white">Add New User</h2>
+                <h2 className="text-2xl font-bold text-white">Edit User</h2>
                 <p className="text-blue-100 text-sm">
-                  Create a new user account
+                  Edit user account details
                 </p>
               </div>
             </div>
@@ -324,26 +316,27 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 </div>
 
                 {/* Username */}
-                <div className="space-y-2">
+                <div className="space-y-2 bg-gray-50">
                   <label className="block text-sm font-semibold text-gray-700">
                     Username
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <div className="absolute inset-y-0 left-0 pl-4 flex   items-center pointer-events-none">
                       <FiEdit3 className="w-5 h-5 text-gray-400" />
                     </div>
                     <input
                       type="text"
+                      disabled={true}
                       value={formData.username}
                       onChange={(e) =>
                         handleInputChange("username", e.target.value)
                       }
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                      className={`w-full pl-12 pr-4 bg-gray-300 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
                         errors.username
-                          ? "border-red-300 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500 hover:border-gray-300"
+                          ? "border-red-300 disabled={true}focus:border-red-500 bg-red-50"
+                          : "border-gray-200 focus:border-blue-500 hover:border-gray-300 italic"
                       }`}
-                      placeholder="Enter username"
+                      placeholder="Can not edit username"
                     />
                   </div>
                   {errors.username && (
@@ -355,37 +348,33 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 </div>
 
                 {/* Role */}
-                <div className="space-y-2">
+                 <div className="space-y-2">
                   <label className="block text-sm font-semibold text-gray-700">
                     Role
                   </label>
                   <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                      <FiUserCheck className="w-5 h-5 text-gray-400" />
+                    <div className="absolute inset-y-0 left-0 pl-4 flex   items-center pointer-events-none">
+                      <FiEdit3 className="w-5 h-5 text-gray-400" />
                     </div>
-                    <select
+                    <input
+                      type="text"
+                      disabled={true}
                       value={formData.role}
                       onChange={(e) =>
-                        handleInputChange("role", e.target.value)
+                        handleInputChange("username", e.target.value)
                       }
-                      className={`w-full pl-12 pr-4 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 appearance-none ${
-                        errors.role
-                          ? "border-red-300 focus:border-red-500 bg-red-50"
-                          : "border-gray-200 focus:border-blue-500 hover:border-gray-300"
+                      className={`w-full pl-12 pr-4 bg-gray-300 py-3 border-2 rounded-xl focus:outline-none transition-all duration-200 ${
+                        errors.username
+                          ? "border-red-300 disabled={true}focus:border-red-500 bg-red-50"
+                          : "border-gray-200 focus:border-blue-500 hover:border-gray-300 italic"
                       }`}
-                    >
-                      <option value="">Select a role</option>
-                      {roles.map((role) => (
-                        <option key={role.value} value={role.value}>
-                          {role.label}
-                        </option>
-                      ))}
-                    </select>
+                      placeholder="Can not edit role"
+                    />
                   </div>
-                  {errors.role && (
+                  {errors.username && (
                     <div className="flex items-center space-x-2 text-red-600 text-sm">
                       <FiAlertCircle className="w-4 h-4" />
-                      <span>{errors.role}</span>
+                      <span>{errors.username}</span>
                     </div>
                   )}
                 </div>
@@ -584,12 +573,12 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
                 {isSubmitting ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span>Creating...</span>
+                    <span>Editing...</span>
                   </>
                 ) : (
                   <>
                     <FiSave className="w-5 h-5" />
-                    <span>Create User</span>
+                    <span>Edit User</span>
                   </>
                 )}
               </button>
@@ -601,4 +590,4 @@ const AddUserModal: React.FC<AddUserModalProps> = ({
   );
 };
 
-export default AddUserModal;
+export default EditUserModal;

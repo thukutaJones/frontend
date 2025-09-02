@@ -1,205 +1,211 @@
-import React from 'react';
-import { 
-  FaPhone, 
-  FaEnvelope, 
-  FaMapMarkerAlt, 
-  FaClock,
-  FaFacebookF,
+/* eslint-disable */
+"use client";
+import React, { useState } from "react";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaQuestionCircle,
+  FaFacebook,
   FaTwitter,
   FaInstagram,
-  FaLinkedinIn,
-  FaStethoscope,
-  FaAmbulance,
-  FaUserMd,
-  FaCalendarAlt,
-  FaShieldAlt,
-  FaHeart
-} from 'react-icons/fa';
+  FaLinkedin
+} from "react-icons/fa";
+import ClinicPanorama from "../ClinicTour";
 
-const Footer: React.FC = () => {
+interface FAQ {
+  id: number;
+  question: string;
+  answer: string;
+  icon: React.ReactNode;
+  category: string;
+  keywords: string[];
+}
+
+const FAQs: React.FC = () => {
+  const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const faqs: FAQ[] = [
+    // ... your FAQ items here
+  ];
+
+  const categories = ["All", ...Array.from(new Set(faqs.map((faq) => faq.category)))];
+
+  const filteredFAQs = faqs.filter((faq) => {
+    const matchesSearch =
+      searchTerm === "" ||
+      faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      faq.keywords.some((keyword) => keyword.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesCategory = selectedCategory === "All" || faq.category === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  const toggleFAQ = (id: number) => {
+    setOpenFAQ(openFAQ === id ? null : id);
+  };
+
   return (
-    <footer className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white relative overflow-hidden">
-      {/* Decorative Background Elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 bg-blue-500 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-slate-500 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/3 w-24 h-24 bg-blue-400 rounded-full blur-2xl"></div>
-      </div>
-      
-      <div className="relative z-10">
-        {/* Main Footer Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-            
-            {/* Company Info */}
-            <div className="lg:col-span-2">
-              <div className="mb-8">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center mr-4">
-                    <FaStethoscope className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white">Wezi Medical Centre</h3>
-                </div>
-                <p className="text-gray-300 text-lg leading-relaxed mb-6 max-w-md">
-                  Providing exceptional healthcare services 24/7 with compassionate care, 
-                  modern facilities, and experienced medical professionals dedicated to your wellbeing.
-                </p>
-                
-                {/* Key Features */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
-                  <div className="flex items-center text-blue-300">
-                    <FaClock className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">24/7 Service</span>
-                  </div>
-                  <div className="flex items-center text-blue-300">
-                    <FaAmbulance className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">Emergency Care</span>
-                  </div>
-                  <div className="flex items-center text-blue-300">
-                    <FaUserMd className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">Expert Doctors</span>
-                  </div>
-                  <div className="flex items-center text-blue-300">
-                    <FaShieldAlt className="w-4 h-4 mr-2" />
-                    <span className="text-sm font-medium">Insurance Accepted</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Social Media */}
-              <div>
-                <h4 className="text-lg font-semibold mb-4 text-white">Connect With Us</h4>
-                <div className="flex space-x-4">
-                  <button className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg">
-                    <FaFacebookF className="w-4 h-4" />
-                  </button>
-                  <button className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg">
-                    <FaTwitter className="w-4 h-4" />
-                  </button>
-                  <button className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg">
-                    <FaInstagram className="w-4 h-4" />
-                  </button>
-                  <button className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-lg flex items-center justify-center transition-all duration-300 transform hover:scale-110 hover:shadow-lg">
-                    <FaLinkedinIn className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Information */}
-            <div>
-              <h4 className="text-xl font-bold mb-6 text-white">Contact Information</h4>
-              <div className="space-y-4">
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center mr-3 mt-1">
-                    <FaMapMarkerAlt className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-gray-300 font-medium">Address</p>
-                    <p className="text-white">Mapale, Mzuzu</p>
-                    <p className="text-white">Malawi</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center mr-3 mt-1">
-                    <FaPhone className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-gray-300 font-medium">Phone</p>
-                    <p className="text-white font-semibold">0880 33 39 80</p>
-                    <p className="text-blue-300 text-sm">24/7 Emergency Line</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center mr-3 mt-1">
-                    <FaEnvelope className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-gray-300 font-medium">Email</p>
-                    <p className="text-white">wezi.enquiries@gmail.com</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start">
-                  <div className="w-8 h-8 bg-blue-600/30 rounded-lg flex items-center justify-center mr-3 mt-1">
-                    <FaClock className="w-4 h-4 text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-gray-300 font-medium">Operating Hours</p>
-                    <p className="text-white font-semibold">24 Hours Daily</p>
-                    <p className="text-blue-300 text-sm">Every Day of the Year</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-xl font-bold mb-6 text-white">Quick Links</h4>
-              <div className="space-y-3">
-                <a href="#services" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  Our Services
-                </a>
-                <a href="#appointments" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  Book Appointment
-                </a>
-                <a href="#emergency" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  Emergency Services
-                </a>
-                <a href="#doctors" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  Our Doctors
-                </a>
-                <a href="#insurance" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  Insurance & Billing
-                </a>
-                <a href="#faq" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  FAQs
-                </a>
-                <a href="#contact" className="block text-gray-300 hover:text-blue-400 transition-colors duration-200 hover:translate-x-2 transform">
-                  Contact Us
-                </a>
-              </div>
-
-              {/* Emergency Button */}
-              <div className="mt-8">
-                <button className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg flex items-center justify-center gap-2">
-                  <FaAmbulance className="w-4 h-4" />
-                  Emergency: 0880 33 39 80
-                </button>
-              </div>
+    <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
+      <div className="max-w-5xl mx-auto flex-grow">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <div className="flex justify-center mb-6">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-lg">
+              <FaQuestionCircle className="w-10 h-10 text-white" />
             </div>
           </div>
+          <h2 className="text-5xl font-bold text-gray-800 mb-4 tracking-tight">
+            Frequently Asked Questions
+          </h2>
+          <div className="w-32 h-1.5 bg-gradient-to-r from-blue-600 to-blue-800 mx-auto mb-8 rounded-full"></div>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Find answers to common questions about our services, appointments, and facilities.
+            Use the search and filters below to quickly find what you're looking for.
+          </p>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-blue-800/30 bg-slate-900/50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div className="flex flex-col md:flex-row items-center justify-between">
-              <div className="flex items-center mb-4 md:mb-0">
-                <FaHeart className="w-4 h-4 text-red-400 mr-2" />
-                <p className="text-gray-400 text-sm">
-                  © 2025 Wezi Medical Centre. All rights reserved.
-                </p>
-              </div>
-              <div className="flex space-x-6 text-sm">
-                <a href="#privacy" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
-                  Privacy Policy
-                </a>
-                <a href="#terms" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
-                  Terms of Service
-                </a>
-                <a href="#accessibility" className="text-gray-400 hover:text-blue-400 transition-colors duration-200">
-                  Accessibility
-                </a>
+        {/* FAQ Items */}
+        <div className="space-y-6">
+          {filteredFAQs.map((faq, index) => (
+            <div
+              key={faq.id}
+              className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              style={{
+                animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`,
+              }}
+            >
+              <button
+                onClick={() => toggleFAQ(faq.id)}
+                className="w-full px-8 py-6 text-left flex items-center justify-between hover:bg-gradient-to-r hover:from-blue-50 hover:to-slate-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset"
+                aria-expanded={openFAQ === faq.id}
+                aria-controls={`faq-answer-${faq.id}`}
+              >
+                <div className="flex items-center gap-4 pr-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center text-blue-600 flex-shrink-0">
+                    {faq.icon}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-800 leading-tight">
+                    {faq.question}
+                  </h3>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <span className="text-xs font-medium text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                    {faq.category}
+                  </span>
+                  {openFAQ === faq.id ? (
+                    <FaChevronUp className="w-5 h-5 text-blue-600 transition-transform duration-300" />
+                  ) : (
+                    <FaChevronDown className="w-5 h-5 text-blue-600 transition-transform duration-300" />
+                  )}
+                </div>
+              </button>
+
+              <div
+                id={`faq-answer-${faq.id}`}
+                className={`transition-all duration-400 ease-in-out ${openFAQ === faq.id ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                  } overflow-hidden`}
+                role="region"
+                aria-labelledby={`faq-question-${faq.id}`}
+              >
+                <div className="px-8 pb-6 pt-2 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-blue-50">
+                  <p className="text-gray-700 leading-relaxed text-base">{faq.answer}</p>
+                </div>
               </div>
             </div>
+          ))}
+
+          {/* 360° Virtual Tour */}
+          <div className="mt-20">
+            <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+              Take a Tour of Wezi Clinic
+            </h3>
+            <ClinicPanorama />
           </div>
         </div>
       </div>
-    </footer>
+
+      {/* Footer */}
+      {/* Footer */}
+      <footer className="mt-20 bg-gray-900 text-gray-200 w-full">
+        <div className="w-full px-6 sm:px-12 py-12 max-w-[1280px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
+          {/* Contact Info */}
+          <div>
+            <h4 className="text-xl font-semibold mb-4">Contact Us</h4>
+            <p className="mb-2">Mapale, Mzuzu, Malawi</p>
+            <p className="mb-2">Phone: 0880 33 39 80</p>
+            <p>Email: wezi.enquiries@gmail.com</p>
+          </div>
+
+          {/* Social Media */}
+          <div>
+            <h4 className="text-xl font-semibold mb-4">Follow Us</h4>
+            <div className="flex gap-4 mt-2">
+              <a href="#" className="hover:text-blue-500 transition-colors">
+                <FaFacebook size={24} />
+              </a>
+              <a href="#" className="hover:text-blue-400 transition-colors">
+                <FaTwitter size={24} />
+              </a>
+              <a href="#" className="hover:text-pink-500 transition-colors">
+                <FaInstagram size={24} />
+              </a>
+              <a href="#" className="hover:text-blue-600 transition-colors">
+                <FaLinkedin size={24} />
+              </a>
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-xl font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="#" className="hover:text-blue-400 transition-colors">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-400 transition-colors">
+                  Services
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-400 transition-colors">
+                  Appointments
+                </a>
+              </li>
+              <li>
+                <a href="#" className="hover:text-blue-400 transition-colors">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm w-full">
+          &copy; {new Date().getFullYear()} Wezi Medical Centre. All rights reserved.
+        </div>
+      </footer>
+
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+    </section>
   );
 };
 
-export default Footer;
+export default FAQs;

@@ -18,6 +18,7 @@ export default function AppointmentsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingAppointment, setEditingAppointment] = useState<any>(null);
+  const [isChangingStatus, setIsChangingStatus] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [loading, setLoading] = useState(false);
@@ -42,12 +43,23 @@ export default function AppointmentsPage() {
     }
   };
 
+  const handleStatusChange = async (appointmenId: string) => {
+    setIsChangingStatus(true);
+    try {
+      await axios.put(`${baseUrl}/api/approve-appointment/${appointmenId}`);
+      await fetchAppointments();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsChangingStatus(false);
+    }
+  };
+
   useEffect(() => {
     fetchAppointments();
   }, [user]);
 
   if (!user || loading) return <LoadingAnimation />;
-
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -83,7 +95,7 @@ export default function AppointmentsPage() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           user={user}
-          callBack={() => console.log("hjdh")}
+          callBack={fetchAppointments}
         />
       )}
     </div>

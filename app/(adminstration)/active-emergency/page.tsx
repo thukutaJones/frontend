@@ -128,7 +128,7 @@ export default function EmergenciesPage() {
         synth.speak(utterance);
       }
     } catch (err) {
-      console.log("Notification/speech synthesis error:", err);
+      console.error("Notification/speech synthesis error:", err);
     }
   }
 });

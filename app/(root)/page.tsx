@@ -1,18 +1,18 @@
 "use client";
 
-import FAQs from "@/components/root/FAQs";
+import React from "react";
 import HeroSection from "@/components/root/HeroSection";
 import Services from "@/components/root/Services";
-import React from "react";
+import FAQs from "@/components/root/FAQs";
+// import ClinicTour from "@/components/ClinicTour";
 
-const page = () => {
+export default function Page() {
   return (
     <div className="w-full">
       <HeroSection />
       <Services />
       <FAQs />
+      {/* <ClinicTour /> */}
     </div>
   );
-};
-
-export default page;
+}
