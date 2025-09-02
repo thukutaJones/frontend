@@ -19,7 +19,7 @@ interface WeziChatbotProps {
 }
 
 const FloatingWeziBot = ({ className = "" }: WeziChatbotProps) => {
-  const { user } = useAuth(['doctor','admin','patient']); // 👈 now we have current user (or guest)
+  const { id , email, role , token } = useAuth(['doctor','admin','patient']); // 👈 now we have current user (or guest)
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -68,7 +68,7 @@ const FloatingWeziBot = ({ className = "" }: WeziChatbotProps) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          user_id: user?.id || "guest", // 👈 attach real user or guest
+          user_id: id || "guest", // 👈 attach real user or guest
           message: newMessage.text,
         }),
       });
