@@ -23,7 +23,7 @@ const HeroSection = ({ name }: { name: string }) => {
           {t(`greeting.${getGreeting()}`)}, {name}
         </p>
         <p className="text-sm text-white opacity-80 mt-2 md:max-w-[65%]">
-          {t(`greeting.dashboardGreeting`)}
+          
         </p>
         <div className="absolute h-full w-full top-0 left-0 bg-[url('/noise.png')] opacity-50 pointer-events-none [mask-image:linear-gradient(to_left,black,transparent)] [-webkit-mask-image:linear-gradient(to_left,black,transparent)]" />
       </div>

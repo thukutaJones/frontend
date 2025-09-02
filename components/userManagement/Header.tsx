@@ -15,12 +15,14 @@ const Header = ({
   filterRole,
   setFilterRole,
   openAddModal,
+  handleAddUser
 }: {
   searchTerm: string;
   setSearchTerm: any;
   setFilterRole: any;
   filterRole: string;
   openAddModal: any;
+  handleAddUser: any;
 }) => {
   return (
     <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 mb-8">
@@ -60,7 +62,7 @@ const Header = ({
 
           {/* Add Button */}
           <button
-            onClick={openAddModal}
+            onClick={handleAddUser}
             className="bg-gradient-to-r from-blue-900 to-indigo-700 text-white px-8 py-3 rounded-xl transition-all duration-300 flex items-center gap-3 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           >
             <FiUserPlus className="w-5 h-5" />

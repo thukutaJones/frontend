@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  allowedDevOrigins: ["*"],
+
+  experimental: {
+    // other experimental options if needed
+  },
 };
 
 export default nextConfig;

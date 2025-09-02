@@ -1,6 +1,8 @@
 "use client";
 
 import LoadingAnimation from "@/components/LoadingAnimation";
+import AddUserModal from "@/components/userManagement/AddUserModal";
+import Demo from "@/components/userManagement/AddUserModal";
 import EditAddUserModal from "@/components/userManagement/EditAddUserModal";
 import Header from "@/components/userManagement/Header";
 import UsersTable from "@/components/userManagement/UsersTable";
@@ -19,6 +21,7 @@ const page = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRole, setFilterRole] = useState<Role | "all">("all");
   const [formData, setFormData] = useState<Partial<User>>({});
+  const [addUserModal, setAddUserModal] = useState<boolean>(false);
 
   const resetForm = () => {
     setFormData({
@@ -29,7 +32,7 @@ const page = () => {
       status: "active",
       gender: "male",
       dob: "",
-      username: ""
+      username: "",
     });
   };
 
@@ -62,7 +65,7 @@ const page = () => {
       });
       setUsers(res.data);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.log("Error fetching users:", error);
     } finally {
       setIsFetchingUsers(false);
     }
@@ -91,6 +94,7 @@ const page = () => {
           filterRole={filterRole}
           setFilterRole={setFilterRole}
           openAddModal={openAddModal}
+          handleAddUser={() => setAddUserModal(true)}
         />
         <UsersTable users={filteredUsers} openEditModal={openEditModal} />
 
@@ -100,6 +104,14 @@ const page = () => {
             closeModal={closeModal}
             formData={formData}
             setFormData={setFormData}
+          />
+        )}
+        {addUserModal && (
+          <AddUserModal
+            onClose={() => setAddUserModal(false)}
+            isOpen={addUserModal}
+            user={user}
+            callack={fetchUsers}
           />
         )}
       </div>
