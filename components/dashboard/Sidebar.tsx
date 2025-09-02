@@ -198,7 +198,7 @@ export default function Sidebar({
                       onMouseEnter={() => setHoveredItem(item.key)}
                       onMouseLeave={() => setHoveredItem(null)}
                       className={`
-                        relative w-full flex items-center justify-between py-1 px-4 rounded-lg
+                        relative w-full flex items-center justify-between py-2 px-4 rounded-lg
                         transition-all duration-500 group overflow-hidden backdrop-blur-sm
                         bg-white
                         ${
@@ -227,7 +227,7 @@ export default function Sidebar({
                         >
                           <Icon
                             className={`
-                            w-4 h-4 transition-all duration-500
+                            w-5 h-5 transition-all duration-500
                             ${
                               isActive
                                 ? "text-blue-900"
