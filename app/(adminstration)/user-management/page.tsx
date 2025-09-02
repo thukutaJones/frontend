@@ -22,26 +22,14 @@ const page = () => {
 
   const resetForm = () => {
     setFormData({
-      full_name: "",
+      name: "",
       email: "",
-      phone_number: "",
+      phone: "",
       role: undefined,
       status: "active",
       gender: "male",
       dob: "",
-      patientDetails: {
-        address: "",
-        nationId: "",
-        conditions: [],
-        emergencyContact: "",
-        medicalRecords: [],
-      },
-      staffDetails: {
-        roleWithin: "doctor",
-        specialties: [],
-        department: "",
-        workingHours: "",
-      },
+      username: ""
     });
   };
 
@@ -67,7 +55,7 @@ const page = () => {
     try {
       if (!user) return;
       setIsFetchingUsers(true);
-      const res = await axios.get(`${baseUrl}/users/all`, {
+      const res = await axios.get(`${baseUrl}/api/allusers`, {
         headers: {
           Authorization: `Bearer ${user?.token}`,
         },

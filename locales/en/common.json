@@ -211,6 +211,7 @@
     "preferredLanguage": "Prefered Language",
     "search": "Search here...",
     "district": "District"
+    
   },
   "greeting": {
     "goodMorning": "Good morning",
@@ -247,7 +248,8 @@
     "departmentAnalytics": "Department Analytics",
     "emergencies": "Emergencies",
     "staffManagement": "Staff Management",
-    "staff": "Antchito"
+    "staff": "Staff",
+    "allUsers": "All Users"
   },
   "errors": {
     "signInInCompleteFieldsError": "Please enter both email and password to continue!!",

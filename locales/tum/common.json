@@ -246,7 +246,8 @@
     "departmentAnalytics": "Kusanda kwa madipatimenti",
     "emergencies": "Vyamwaluŵiro",
     "staffManagement": "Antchito",
-    "staff": "Antchito"
+    "staff": "Antchito",
+    "allUsers": "Awonse wagwirisi"
   },
   "errors": {
     "signInInCompleteFieldsError": "Chonde lembani imelu na pasiwedi yinu kuti mulutilire!!",

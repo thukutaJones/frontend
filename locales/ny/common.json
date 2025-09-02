@@ -246,7 +246,8 @@
     "departmentAnalytics": "Kusanthula kwa madipatimenti",
     "emergencies": "Zadzidzidzi",
     "staffManagement": "Antchito",
-    "staff": "Antchito"
+    "staff": "Antchito",
+    "allUsers": "Ma user onse"
   },
   "errors": {
     "signInInCompleteFieldsError": "Chonde lembani imelo ndi mawu achinsinsi anu kuti mupitirize!!",

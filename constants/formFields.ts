@@ -141,6 +141,14 @@ export const signUpFields = {
 export const addUserFields = {
   basicInfo: [
     {
+      label: "Username",
+      name: "username",
+      type: "text",
+      placeholder: "Enter your username",
+      icon: RiUserLine,
+      variable: "userName",
+    },
+    {
       id: "fullName",
       title: "Full Name",
       type: "text",

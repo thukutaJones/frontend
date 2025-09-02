@@ -13,7 +13,10 @@ import {
   FiHeart,
   FiActivity,
   FiMapPin,
+  FiUserX,
+  FiUserCheck
 } from "react-icons/fi";
+
 
 const UsersTable = ({
   users = [],
@@ -70,11 +73,11 @@ const UsersTable = ({
                       </div>
                       <div>
                         <div className="text-base font-bold text-gray-900">
-                          {user?.full_name}
+                          {user?.name}
                         </div>
                         <div className="text-sm text-gray-600 flex items-center gap-2 mt-1">
                           <FiMail className="w-4 h-4" />
-                          {user?.email}
+                          {user?.email || "--"}
                         </div>
                       </div>
                     </div>
@@ -145,7 +148,7 @@ const UsersTable = ({
                           user?.status === "active" ? "Deactivate" : "Activate"
                         }
                       >
-                        <FiPower className="w-5 h-5" />
+                        <FiUserX className="w-5 h-5" />
                       </button>
                     </div>
                   </td>

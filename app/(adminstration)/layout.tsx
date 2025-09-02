@@ -10,9 +10,7 @@ import {
 import Sidebar from "@/components/dashboard/Sidebar";
 import DashboardTopBar from "@/components/dashboard/DasboardTopar";
 import { useAuth } from "@/hooks/useAuth";
-import { retriveUserData } from "@/utils/retriveUserData";
 import { MdEmail } from "react-icons/md";
-import { subscribeUser } from "@/utils/subscribePush";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -29,10 +27,6 @@ export default function DashboardLayout({ children }: LayoutProps) {
   ]);
   const userRole: any = user?.role;
 
-  useEffect(() => {
-    if (!user) return;
-    subscribeUser(user?.token);
-  }, [user]);
 
   const getMenuItems = () => {
     switch (userRole) {
