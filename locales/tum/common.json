@@ -247,7 +247,8 @@
     "emergencies": "Vyamwaluŵiro",
     "staffManagement": "Antchito",
     "staff": "Antchito",
-    "allUsers": "Awonse wagwirisi"
+    "allUsers": "Awonse wagwirisi",
+    "settings": "Vyakusankha"
   },
   "errors": {
     "signInInCompleteFieldsError": "Chonde lembani imelu na pasiwedi yinu kuti mulutilire!!",

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
+import Link from "next/link";
 
 const HeroSection = () => {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ const HeroSection = () => {
   }, [content.length]);
 
   return (
-    <div className="w-full h-[60vh] md:h-[calc(100vh-70px)] mt-[70px] relative overflow-hidden">
+    <div className="w-full h-[60vh] md:h-[calc(100vh-70px)] mt-[70px] relative overflow-hidden" id="home">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -74,12 +75,12 @@ const HeroSection = () => {
               transition={{ duration: 1.2, ease: "easeInOut", delay: 0.4 }}
               className="mt-10 flex gap-5"
             >
-              <button className="px-8 py-3 bg-blue-900 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/40 transition duration-500 text-white font-semibold rounded-full">
+              <Link href={'/#contactUs'} className="px-8 py-3 bg-blue-900 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/40 transition duration-500 text-white font-semibold rounded-full">
                 {t("root.hero_section.buttons.contactUs")}
-              </button>
-              <button className="px-8 py-3 bg-gray-50 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/40 transition duration-500 text-blue-900 font-semibold rounded-full">
+              </Link>
+              <Link href={'/#services'} className="px-8 py-3 bg-gray-50 hover:scale-105 hover:shadow-lg hover:shadow-blue-600/40 transition duration-500 text-blue-900 font-semibold rounded-full">
                 {t("root.hero_section.buttons.ourServices")}
-              </button>
+              </Link>
             </motion.div>
             {/* Smooth Dots Indicator */}
             <div className="absolute bottom-10 w-full flex justify-center gap-3">

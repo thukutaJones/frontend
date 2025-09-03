@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FiPlus,
   FiEdit3,
@@ -16,71 +16,69 @@ import {
   FiNavigation,
   FiClock,
 } from "react-icons/fi";
-
-import { RiBuildingLine } from "react-icons/ri"
-
-
+import {
+  createDepartment,
+  updateDepartment,
+  fetchDepartmentsAPI,
+  deleteDepartmentAPI,
+  getAuthHeader,
+} from "./departmentOp";
+import { RiBuildingLine } from "react-icons/ri";
+import { useAuth } from "@/hooks/useAuth";
+import LoadingAnimation from "@/components/LoadingAnimation";
 // Types
 interface Department {
+  _id: string;
   id: string;
   name: string;
   roomNumber: string;
   contactPhone: string;
   description: string;
+  code: string;
   latitude?: number;
   longitude?: number;
   locationName?: string;
   createdAt: string;
 }
 
-// Sample data
-const initialDepartments: Department[] = [
-  {
-    id: "1",
-    name: "Emergency Department",
-    roomNumber: "ER-001",
-    contactPhone: "+265-1-234-567",
-    description: "24/7 emergency medical services and trauma care",
-    latitude: -13.9626,
-    longitude: 33.7741,
-    locationName: "Ground Floor, Main Building",
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    name: "Cardiology Department",
-    roomNumber: "CD-102",
-    contactPhone: "+265-1-234-568",
-    description: "Comprehensive cardiovascular care and cardiac procedures",
-    latitude: -13.9630,
-    longitude: 33.7745,
-    locationName: "Second Floor, East Wing",
-    createdAt: "2024-01-16",
-  },
-  {
-    id: "3",
-    name: "Pediatrics",
-    roomNumber: "PD-205",
-    contactPhone: "+265-1-234-569",
-    description: "Specialized medical care for infants, children, and adolescents",
-    locationName: "Third Floor, West Wing",
-    createdAt: "2024-01-17",
-  },
-];
-
 const DepartmentsPage = () => {
-  const [departments, setDepartments] = useState<Department[]>(initialDepartments);
+  const [departments, setDepartments] = useState<Department[]>([]);
   const [showModal, setShowModal] = useState(false);
-  const [editingDepartment, setEditingDepartment] = useState<Department | null>(null);
+  const [editingDepartment, setEditingDepartment] = useState<Department | null>(
+    null
+  );
   const [formData, setFormData] = useState<Partial<Department>>({});
   const [searchTerm, setSearchTerm] = useState("");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
-  const [showMapPicker, setShowMapPicker] = useState(false);
-  const [mapCenter, setMapCenter] = useState({ lat: -13.9626, lng: 33.7741 });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(
+    null
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const user = useAuth(["admin"]);
+  // ✅ Load from backend
+  const fetchDepartments = async () => {
+    try {
+      if (!user?.token) return;
+      setIsLoading(true);
+      const res = await fetchDepartmentsAPI(user.token);
+      console.log(`Departments res: ${res}`);
+      setDepartments(res);
+    } catch (error) {
+      console.error(`Error fetching departments:`, error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAuthHeader(user?.token);
+    fetchDepartments();
+  }, [user]);
 
   const resetForm = () => {
     setFormData({
       name: "",
+      code: "",
       roomNumber: "",
       contactPhone: "",
       description: "",
@@ -105,85 +103,118 @@ const DepartmentsPage = () => {
   const closeModal = () => {
     setShowModal(false);
     setEditingDepartment(null);
-    setShowMapPicker(false);
     resetForm();
   };
 
-  const handleFormSubmit = (e: React.FormEvent) => {
+  // ✅ Save (Add or Update)
+  // ✅ Save (Add or Update)
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const departmentData = {
-      ...formData,
-      id: editingDepartment?.id || Date.now().toString(),
-      createdAt: editingDepartment?.createdAt || new Date().toISOString().split("T")[0],
-    } as Department;
+    try {
+      if (!user?.token) return;
 
-    if (editingDepartment) {
-      setDepartments(
-        departments.map((dept) => 
-          dept.id === editingDepartment.id ? departmentData : dept
-        )
-      );
-    } else {
-      setDepartments([...departments, departmentData]);
+      if (editingDepartment) {
+        // Only include fields that have changed
+        const updatedFields: Partial<Department> = {};
+
+        (Object.keys(formData) as (keyof Department)[]).forEach((key) => {
+          if (formData[key] !== editingDepartment[key]) {
+            updatedFields[key] = formData[key] as any;
+          }
+        });
+
+        if (Object.keys(updatedFields).length === 0) {
+          console.log("No changes made.");
+          closeModal();
+          return;
+        }
+        console.log(editingDepartment);
+        await updateDepartment(
+          editingDepartment._id,
+          updatedFields,
+          user.token
+        );
+        // setDepartments(
+        //   departments.map((d) => (d._id === editingDepartment._id ? updated : d))
+        // );
+      } else {
+        await createDepartment(formData, user.token);
+      }
+      await fetchDepartments();
+      closeModal();
+    } catch (err) {
+      console.error("Error saving department:", err);
     }
-
-    closeModal();
   };
 
-  const deleteDepartment = (id: string) => {
-    setDepartments(departments.filter(dept => dept.id !== id));
+  // ✅ Delete (backend + local state)
+  const deleteDepartment = async (id: string) => {
+    try {
+      await deleteDepartmentAPI(id, user?.token);
+      await fetchDepartments();
+    } catch (err) {
+      console.error("Error deleting department:", err);
+    }
     setShowDeleteConfirm(null);
   };
 
-  const filteredDepartments = departments.filter((dept) =>
-    dept.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dept.roomNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dept.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (dept.locationName && dept.locationName.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
-  const generateGoogleMapsUrl = (lat: number, lng: number) => {
-    return `https://maps.google.com/?q=${lat},${lng}`;
+  // ✅ Location helpers
+  const getCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setFormData({
+          ...formData,
+          latitude: pos.coords.latitude,
+          longitude: pos.coords.longitude,
+        });
+      },
+      (err) => {
+        console.error("Error getting location:", err);
+        alert("Unable to retrieve your location.");
+      }
+    );
   };
 
   const openGoogleMaps = () => {
     if (formData.latitude && formData.longitude) {
-      window.open(generateGoogleMapsUrl(formData.latitude, formData.longitude), '_blank');
-    }
-  };
-
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setFormData({
-            ...formData,
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-          });
-        },
-        (error) => {
-          alert("Unable to get your location. Please enter coordinates manually or use the map.");
-        }
+      window.open(
+        `https://maps.google.com/?q=${formData.latitude},${formData.longitude}`,
+        "_blank"
       );
-    } else {
-      alert("Geolocation is not supported by this browser.");
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+  // Filtering
+  const filteredDepartments = departments.filter(
+    (dept) =>
+      (dept.name ?? "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (dept.roomNumber ?? "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (dept.description ?? "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (dept.locationName ?? "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const generateGoogleMapsUrl = (lat: number, lng: number) =>
+    `https://maps.google.com/?q=${lat},${lng}`;
+
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
-  };
 
-  const hasLocation = (dept: Department) => {
-    return dept.latitude && dept.longitude;
-  };
+  const hasLocation = (dept: Department) => dept.latitude && dept.longitude;
 
+  if (!user || isLoading) return <LoadingAnimation />;
   return (
     <div className="min-h-screen bg-gradient-to-br text-gray-600 from-slate-50 via-blue-50/30 to-indigo-50/40 p-6">
       <div className="max-w-7xl mx-auto">
@@ -201,11 +232,14 @@ const DepartmentsPage = () => {
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-500">
                   <FiMapPin className="w-4 h-4" />
-                  <span>{departments.filter(d => hasLocation(d)).length} With Locations</span>
+                  <span>
+                    {departments.filter((d) => hasLocation(d)).length} With
+                    Locations
+                  </span>
                 </div>
               </div>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row w-full lg:w-auto gap-4">
               {/* Search */}
               <div className="flex items-center w-full sm:flex-1 lg:w-80 bg-white/80 backdrop-blur-sm border border-gray-200/50 rounded-xl px-4 py-3 shadow-sm">
@@ -233,9 +267,9 @@ const DepartmentsPage = () => {
 
         {/* Departments Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredDepartments.map((department) => (
+          {filteredDepartments.map((department, index) => (
             <div
-              key={department.id}
+              key={index}
               className="group bg-white/90 backdrop-blur-md rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-white/20 hover:border-blue-200/50"
             >
               {/* Header */}
@@ -253,7 +287,7 @@ const DepartmentsPage = () => {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button
                     onClick={() => openEditModal(department)}
@@ -263,7 +297,7 @@ const DepartmentsPage = () => {
                     <FiEdit3 className="w-4 h-4" />
                   </button>
                   <button
-                    onClick={() => setShowDeleteConfirm(department.id)}
+                    onClick={() => setShowDeleteConfirm(department._id)}
                     className="p-2.5 text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 hover:scale-110"
                     title="Delete Department"
                   >
@@ -278,7 +312,9 @@ const DepartmentsPage = () => {
                 <div className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-4 border border-gray-100/50">
                   <div className="flex items-start gap-3">
                     <FiFileText className="w-4 h-4 text-gray-500 mt-0.5 shrink-0" />
-                    <p className="text-sm text-gray-700 leading-relaxed">{department.description}</p>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {department.description}
+                    </p>
                   </div>
                 </div>
 
@@ -288,8 +324,12 @@ const DepartmentsPage = () => {
                     <FiPhone className="w-4 h-4 text-white" />
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Contact</p>
-                    <p className="text-sm font-semibold text-gray-900">{department.contactPhone}</p>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                      Contact
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {department.contactPhone}
+                    </p>
                   </div>
                 </div>
 
@@ -299,14 +339,19 @@ const DepartmentsPage = () => {
                     <FiMapPin className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Location</p>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+                      Location
+                    </p>
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-medium text-gray-900">
                         {department.locationName || "Location not specified"}
                       </p>
                       {hasLocation(department) && (
                         <a
-                          href={generateGoogleMapsUrl(department.latitude!, department.longitude!)}
+                          href={generateGoogleMapsUrl(
+                            department.latitude!,
+                            department.longitude!
+                          )}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="p-1.5 text-blue-600 hover:bg-blue-100 rounded-lg transition-all duration-200 hover:scale-110"
@@ -343,12 +388,13 @@ const DepartmentsPage = () => {
             <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <RiBuildingLine className="w-16 h-16 text-gray-400" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">No departments found</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">
+              No departments found
+            </h3>
             <p className="text-gray-600 mb-8 max-w-md mx-auto">
-              {searchTerm 
-                ? "No departments match your search criteria. Try different keywords." 
-                : "Start organizing your hospital by creating your first department."
-              }
+              {searchTerm
+                ? "No departments match your search criteria. Try different keywords."
+                : "Start organizing your hospital by creating your first department."}
             </p>
             {!searchTerm && (
               <button
@@ -370,13 +416,14 @@ const DepartmentsPage = () => {
                 <div className="flex justify-between items-center">
                   <div>
                     <h2 className="text-2xl font-bold">
-                      {editingDepartment ? "Edit Department" : "Create New Department"}
+                      {editingDepartment
+                        ? "Edit Department"
+                        : "Create New Department"}
                     </h2>
                     <p className="text-blue-100 text-sm mt-1">
-                      {editingDepartment 
-                        ? "Update department information and settings" 
-                        : "Add a new department to your hospital system"
-                      }
+                      {editingDepartment
+                        ? "Update department information and settings"
+                        : "Add a new department to your hospital system"}
                     </p>
                   </div>
                   <button
@@ -398,7 +445,25 @@ const DepartmentsPage = () => {
                     type="text"
                     required
                     value={formData.name || ""}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 font-medium"
+                    placeholder="e.g., Emergency Department, Cardiology"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-bold text-gray-800 mb-3">
+                    Department Code
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.code || ""}
+                    onChange={(e) =>
+                      setFormData({ ...formData, code: e.target.value })
+                    }
                     className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 font-medium"
                     placeholder="e.g., Emergency Department, Cardiology"
                   />
@@ -413,7 +478,9 @@ const DepartmentsPage = () => {
                     type="text"
                     required
                     value={formData.roomNumber || ""}
-                    onChange={(e) => setFormData({ ...formData, roomNumber: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, roomNumber: e.target.value })
+                    }
                     className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 font-medium"
                     placeholder="e.g., ER-001, CD-102, PD-205"
                   />
@@ -428,7 +495,9 @@ const DepartmentsPage = () => {
                     type="tel"
                     required
                     value={formData.contactPhone || ""}
-                    onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, contactPhone: e.target.value })
+                    }
                     className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 font-medium"
                     placeholder="e.g., +265-1-234-567"
                   />
@@ -442,7 +511,9 @@ const DepartmentsPage = () => {
                   <textarea
                     required
                     value={formData.description || ""}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                     className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 font-medium resize-none"
                     rows={3}
                     placeholder="Describe the department's services, specialties, and purpose"
@@ -457,7 +528,9 @@ const DepartmentsPage = () => {
                   <input
                     type="text"
                     value={formData.locationName || ""}
-                    onChange={(e) => setFormData({ ...formData, locationName: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, locationName: e.target.value })
+                    }
                     className="w-full px-4 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white/80 backdrop-blur-sm text-gray-800 font-medium"
                     placeholder="e.g., Ground Floor Main Building, Second Floor East Wing"
                   />
@@ -467,8 +540,12 @@ const DepartmentsPage = () => {
                 <div className="bg-blue-50/50 border border-blue-200 rounded-xl p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <h3 className="text-lg font-bold text-gray-800">GPS Location (Optional)</h3>
-                      <p className="text-sm text-gray-600">Add precise coordinates for navigation</p>
+                      <h3 className="text-lg font-bold text-gray-800">
+                        GPS Location (Optional)
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        Add precise coordinates for navigation
+                      </p>
                     </div>
                     <FiMapPin className="w-6 h-6 text-blue-600" />
                   </div>
@@ -505,7 +582,12 @@ const DepartmentsPage = () => {
                         type="number"
                         step="any"
                         value={formData.latitude || ""}
-                        onChange={(e) => setFormData({ ...formData, latitude: parseFloat(e.target.value) || undefined })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            latitude: parseFloat(e.target.value) || undefined,
+                          })
+                        }
                         className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white text-gray-800"
                         placeholder="e.g., -13.9626"
                       />
@@ -518,7 +600,12 @@ const DepartmentsPage = () => {
                         type="number"
                         step="any"
                         value={formData.longitude || ""}
-                        onChange={(e) => setFormData({ ...formData, longitude: parseFloat(e.target.value) || undefined })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            longitude: parseFloat(e.target.value) || undefined,
+                          })
+                        }
                         className="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-white text-gray-800"
                         placeholder="e.g., 33.7741"
                       />
@@ -530,7 +617,8 @@ const DepartmentsPage = () => {
                       <div className="flex items-center gap-2 text-green-700">
                         <FiMap className="w-4 h-4" />
                         <span className="text-sm font-medium">
-                          GPS coordinates saved: {formData.latitude.toFixed(6)}, {formData.longitude.toFixed(6)}
+                          GPS coordinates saved: {formData.latitude.toFixed(6)},{" "}
+                          {formData.longitude.toFixed(6)}
                         </span>
                       </div>
                     </div>
@@ -547,11 +635,14 @@ const DepartmentsPage = () => {
                     Cancel
                   </button>
                   <button
+                    onClick={handleFormSubmit}
                     type="submit"
                     className="px-8 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transition-all duration-300 font-semibold flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
                   >
                     <FiSave className="w-4 h-4" />
-                    {editingDepartment ? "Update Department" : "Create Department"}
+                    {editingDepartment
+                      ? "Update Department"
+                      : "Create Department"}
                   </button>
                 </div>
               </div>
@@ -567,9 +658,13 @@ const DepartmentsPage = () => {
                 <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <FiTrash2 className="w-10 h-10 text-red-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Delete Department</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                  Delete Department
+                </h3>
                 <p className="text-gray-600 mb-8 leading-relaxed">
-                  Are you sure you want to permanently delete this department? This action cannot be undone and all associated data will be lost.
+                  Are you sure you want to permanently delete this department?
+                  This action cannot be undone and all associated data will be
+                  lost.
                 </p>
                 <div className="flex gap-4 justify-center">
                   <button

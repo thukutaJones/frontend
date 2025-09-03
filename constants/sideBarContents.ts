@@ -13,6 +13,7 @@ import {
   RiCalendarLine,
   RiMessage2Line,
 } from "react-icons/ri";
+import { LuSettings } from "react-icons/lu";
 import { RiMessage3Line, RiRobot2Line } from "react-icons/ri";
 import { BiMessageSquareDetail } from "react-icons/bi";
 import { RiAlarmWarningLine, RiHistoryLine } from "react-icons/ri";
@@ -103,9 +104,9 @@ export const adminMenuItems = [
     ],
   },
   {
-    key: "profile",
-    title: "Profile",
-    icon: RiUserLine,
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
     gradient: "from-indigo-500 to-blue-700",
     children: [
       {
@@ -114,6 +115,12 @@ export const adminMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -156,11 +163,24 @@ export const hodMenuItems = [
     ],
   },
   {
-    key: "profile",
-    title: "Profile",
-    icon: RiUserLine,
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
     gradient: "from-indigo-500 to-blue-700",
-    children: [{ title: "My Profile", icon: RiUserLine, route: "/profile" }],
+    children: [
+      {
+        title: "My Profile",
+        icon: RiUserLine,
+        route: "/profile",
+        key: "myProfile",
+      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
+    ],
   },
 ];
 
@@ -216,11 +236,147 @@ export const staffMenuItems = [
     ],
   },
   {
-    key: "profile",
-    title: "Profile",
-    icon: RiUserLine,
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
     gradient: "from-indigo-500 to-blue-700",
-    children: [{ title: "My Profile", icon: RiUserLine, route: "/profile" }],
+    children: [
+      {
+        title: "My Profile",
+        icon: RiUserLine,
+        route: "/profile",
+        key: "myProfile",
+      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
+    ],
+  },
+];
+
+export const nurseMenuItems = [
+  {
+    key: "dashboard",
+    title: "Dashboard",
+    icon: RiDashboardLine,
+    gradient: "from-green-500 to-green-600",
+    children: [{ title: "Home", icon: RiDashboardLine, route: "/dashboard" }],
+  },
+  {
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
+    gradient: "from-indigo-500 to-blue-700",
+    children: [
+      {
+        title: "My Profile",
+        icon: RiUserLine,
+        route: "/profile",
+        key: "myProfile",
+      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
+    ],
+  },
+];
+
+export const doctorMenuItems = [
+  {
+    key: "dashboard",
+    title: "Dashboard",
+    icon: RiDashboardLine,
+    gradient: "from-green-500 to-green-600",
+    children: [{ title: "Home", icon: RiDashboardLine, route: "/dashboard" }],
+  },
+  {
+    key: "appointments",
+    title: "Appointments",
+    icon: RiCalendarLine,
+    gradient: "from-blue-500 to-purple-600",
+    children: [
+      {
+        title: "All appointments",
+        icon: RiCalendarLine,
+        route: "/appointments",
+      }
+    ],
+  },
+  {
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
+    gradient: "from-indigo-500 to-blue-700",
+    children: [
+      {
+        title: "My Profile",
+        icon: RiUserLine,
+        route: "/profile",
+        key: "myProfile",
+      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
+    ],
+  },
+];
+
+export const ambulanceDriver = [
+  {
+    key: "dashboard",
+    title: "Dashboard",
+    icon: RiDashboardLine,
+    gradient: "from-green-500 to-green-600",
+    children: [{ title: "Home", icon: RiDashboardLine, route: "/dashboard" }],
+  },
+  {
+    key: "emergencies",
+    title: "Emergencies",
+    icon: MdOutlineEmergency,
+    gradient: "from-red-500 to-orange-600",
+    children: [
+      {
+        title: "Active Emergency",
+        icon: RiAlarmWarningLine,
+        route: "/active-emergency",
+        key: "activeEmergency",
+      },
+      {
+        title: "Past Emergencies",
+        icon: RiHistoryLine,
+        route: "/past-emergencies",
+        key: "pastEmergency",
+      },
+    ],
+  },
+  {
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
+    gradient: "from-indigo-500 to-blue-700",
+    children: [
+      {
+        title: "My Profile",
+        icon: RiUserLine,
+        route: "/profile",
+        key: "myProfile",
+      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
+    ],
   },
 ];
 
@@ -250,12 +406,6 @@ export const patientMenuItems = [
         icon: RiRobot2Line,
         route: "/wezi-bot",
         key: "wezBot",
-      },
-      {
-        title: "Enquiries",
-        icon: BiMessageSquareDetail,
-        route: "/enquiries",
-        key: "enquiries",
       },
     ],
   },
@@ -322,9 +472,9 @@ export const patientMenuItems = [
     ],
   },
   {
-    key: "profile",
-    title: "Profile",
-    icon: RiUserLine,
+    key: "settings",
+    title: "Settings",
+    icon: LuSettings,
     gradient: "from-indigo-500 to-blue-700",
     children: [
       {
@@ -333,6 +483,12 @@ export const patientMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];

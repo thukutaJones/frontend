@@ -11,7 +11,7 @@ export const navContent = [
   },
   {
     title: "About Us",
-    route: "/#aboutUs",
+    route: "/#faqs",
     icon: RiTeamLine,
     key: "aboutUs"
   },
