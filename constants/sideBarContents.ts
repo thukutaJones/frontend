@@ -115,12 +115,12 @@ export const adminMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -174,12 +174,12 @@ export const hodMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -247,12 +247,12 @@ export const staffMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -277,12 +277,12 @@ export const nurseMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -302,20 +302,10 @@ export const doctorMenuItems = [
     gradient: "from-blue-500 to-purple-600",
     children: [
       {
-        title: "Pending",
+        title: "All appointments",
         icon: RiCalendarLine,
-        route: "/appointments?status=pending",
-      },
-      {
-        title: "Completed",
-        icon: RiCalendarLine,
-        route: "/appointments?status=completed",
-      },
-      {
-        title: "Cancelled",
-        icon: RiCalendarLine,
-        route: "/appointments?status=cancelled",
-      },
+        route: "/appointments",
+      }
     ],
   },
   {
@@ -330,12 +320,12 @@ export const doctorMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -380,12 +370,12 @@ export const ambulanceDriver = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];
@@ -493,12 +483,12 @@ export const patientMenuItems = [
         route: "/profile",
         key: "myProfile",
       },
-      {
-        title: "Settings",
-        icon: LuSettings,
-        route: "/settings",
-        key: "settings",
-      },
+      // {
+      //   title: "Settings",
+      //   icon: LuSettings,
+      //   route: "/settings",
+      //   key: "settings",
+      // },
     ],
   },
 ];

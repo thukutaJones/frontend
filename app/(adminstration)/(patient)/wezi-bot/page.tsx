@@ -11,6 +11,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
 import { connectSocket, disconnectSocket } from "@/utils/socket";
+import ChatBotStatus from "@/components/wezBot/ChatBotStatus";
 
 const page = () => {
   const user = useAuth(["patient"]);
@@ -24,6 +25,10 @@ const page = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isCancelling, setIsCancelling] = useState<boolean>(false);
+  const [chatStatus, setChatStatus] = useState<
+    "chat" | "appointment booking" | "initialized"
+  >("chat");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -119,6 +124,61 @@ const page = () => {
       console.log(chatReply);
 
       setMessages((prev: any) => [...prev, chatReply]);
+      setChatStatus(res?.data?.metadata?.state);
+
+      if (
+        res?.data?.metadata?.state === "initialized" &&
+        "speechSynthesis" in window
+      ) {
+        speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(
+          "Entering appointment booking session"
+        );
+        utterance.pitch = 1.2; // slightly higher, more expressive
+        utterance.rate = 0.95; // slower for clarity
+        utterance.volume = 1;
+        utterance.lang = "en-US";
+
+        // Try to select a female voice
+        const voices = speechSynthesis.getVoices();
+        const preferredVoice = voices.find(
+          (voice) =>
+            voice.name.toLowerCase().includes("female") ||
+            voice.name.toLowerCase().includes("samantha") || // iOS/macOS
+            voice.name.toLowerCase().includes("google us english") // Chrome/Android
+        );
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        utterance.onstart = () => {
+          setIsProcessing(false);
+          setIsSpeaking(true);
+        };
+
+        utterance.onend = () => {
+          setIsSpeaking(false);
+          const notActiveAudio = new Audio("/notactive.mp3");
+          notActiveAudio.play();
+        };
+
+        // Handle cases where voices load async
+        if (!voices.length) {
+          speechSynthesis.onvoiceschanged = () => {
+            const newVoices = speechSynthesis.getVoices();
+            const fallbackVoice = newVoices.find((voice) =>
+              voice.name.toLowerCase().includes("female")
+            );
+            if (fallbackVoice) utterance.voice = fallbackVoice;
+            speechSynthesis.speak(utterance);
+          };
+        } else {
+          speechSynthesis.speak(utterance);
+        }
+      } else {
+        console.log("Text-to-Speech is not supported in this browser.");
+      }
     } catch (error) {
       console.log(error);
     } finally {
@@ -178,7 +238,7 @@ const page = () => {
 
         speechSynthesis.speak(utterance);
       } else {
-        alert("Text-to-Speech is not supported in this browser.");
+        console.log("Text-to-Speech is not supported in this browser.");
       }
     } catch (error) {
     } finally {
@@ -189,6 +249,79 @@ const page = () => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
+    }
+  };
+
+  const handleCancelBookingSession = async () => {
+    try {
+      setIsCancelling(true);
+      const res = await axios.post(
+        `${baseUrl}/api/chat/cancel-booking-session/${user?.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      const chatReply = res?.data;
+      console.log(chatReply);
+
+      setMessages((prev: any) => [...prev, chatReply]);
+      setChatStatus(res?.data?.metadata?.state);
+
+      if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+
+        const utterance = new SpeechSynthesisUtterance(
+          "Appointment booking session cancelled successfully"
+        );
+        utterance.pitch = 1.2; // slightly higher, more expressive
+        utterance.rate = 0.95; // slower for clarity
+        utterance.volume = 1;
+        utterance.lang = "en-US";
+
+        // Try to select a female voice
+        const voices = speechSynthesis.getVoices();
+        const preferredVoice = voices.find(
+          (voice) =>
+            voice.name.toLowerCase().includes("female") ||
+            voice.name.toLowerCase().includes("samantha") || // iOS/macOS
+            voice.name.toLowerCase().includes("google us english") // Chrome/Android
+        );
+        if (preferredVoice) {
+          utterance.voice = preferredVoice;
+        }
+
+        utterance.onstart = () => {
+          setIsProcessing(false);
+          setIsSpeaking(true);
+        };
+
+        utterance.onend = () => {
+          setIsSpeaking(false);
+          const notActiveAudio = new Audio("/notactive.mp3");
+          notActiveAudio.play();
+        };
+
+        // Handle cases where voices load async
+        if (!voices.length) {
+          speechSynthesis.onvoiceschanged = () => {
+            const newVoices = speechSynthesis.getVoices();
+            const fallbackVoice = newVoices.find((voice) =>
+              voice.name.toLowerCase().includes("female")
+            );
+            if (fallbackVoice) utterance.voice = fallbackVoice;
+            speechSynthesis.speak(utterance);
+          };
+        } else {
+          speechSynthesis.speak(utterance);
+        }
+      } else {
+        console.log("Text-to-Speech is not supported in this browser.");
+      }
+    } catch (error) {
+    } finally {
+      setIsCancelling(false);
     }
   };
 
@@ -248,6 +381,15 @@ const page = () => {
         uploadAudio={uploadAudio}
         isProcessing={isProcessing}
       />
+      {(chatStatus === "appointment booking" ||
+        chatStatus === "initialized") && (
+        <ChatBotStatus
+          status={chatStatus}
+          handleClick={handleCancelBookingSession}
+          isCancelling={isCancelling}
+          isProcessing={isTyping}
+        />
+      )}
     </div>
   );
 };
