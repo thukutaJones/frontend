@@ -65,7 +65,7 @@ const FAQs = () => {
   };
 
   return (
-    <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 min-h-screen">
+    <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 min-h-screen" id="faqs">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
@@ -154,7 +154,7 @@ const FAQs = () => {
 
         {/* Contact Section */}
         <div className="text-center mt-20">
-          <div className="bg-white rounded-3xl p-10 shadow-xl border border-gray-100 relative overflow-hidden">
+          <div className="bg-white rounded-3xl p-10 shadow-xl border border-gray-100 relative overflow-hidden" id="contactUs">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-slate-600/5"></div>
             <div className="relative">
               <h3 className="text-3xl font-bold text-gray-800 mb-4">

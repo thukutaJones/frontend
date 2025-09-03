@@ -2,6 +2,7 @@ import React from "react";
 import { RiRobot2Line, RiUser3Line } from "react-icons/ri";
 import TypingIndicator from "./TypingIndicator";
 import { formatTime } from "@/utils/formatDatenTime";
+import Image from "next/image";
 
 const MessagesContainer = ({
   messages = [],
@@ -14,7 +15,7 @@ const MessagesContainer = ({
   messagesEndRef: any;
   type: string;
 }) => {
-  console.log("messages: ",messages)
+  console.log("messages: ", messages);
   return (
     <div className="flex-1 overflow-y-auto scroll-container pb-6">
       <div className="space-y-6">
@@ -60,12 +61,25 @@ const MessagesContainer = ({
                           : "text-blue-900"
                       }`}
                     />
+                  ) : message?.sender === "hod" ? (
+                    <Image
+                      src={"/wezLogo.png"}
+                      width={200}
+                      height={200}
+                      alt="wezi_logo"
+                      className="h-5 w-5"
+                    />
                   ) : (
                     <RiRobot2Line className="w-4 h-4 text-blue-900" />
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
+                  {message.metadata?.escalatedTo && message?.sender === "hod" && (
+                    <span className="text-xs text-green-600 italic font-semibold mb-1 inline-block">
+                      Response from HOD
+                    </span>
+                  )}
                   <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
                     {message?.message}
                   </p>

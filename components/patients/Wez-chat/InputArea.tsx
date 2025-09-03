@@ -18,11 +18,11 @@ const InputArea = ({
   inputText: any;
   handleSendMessage: any;
   type: string;
-  uploadAudio: any;
-  isProcessing: boolean;
+  uploadAudio?: any;
+  isProcessing?: boolean;
 }) => {
   return (
-    <div className="bg-white/80 z-20 backdrop-blur-xl border-t border-gray-200/50 p-4 md:p-6 sticky bottom-0">
+    <div className="bg-white/80 z-60 backdrop-blur-xl border-t border-gray-200/50 p-4 md:p-6 sticky bottom-0">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-end space-x-3 md:space-x-4">
           <div className="flex-1 relative">
@@ -48,7 +48,7 @@ const InputArea = ({
             </button>
           ) : (
             type == "bot" && (
-              <Recorder uploadAudio={uploadAudio} isProcessing={isProcessing} />
+              <Recorder uploadAudio={uploadAudio} isProcessing={isProcessing || false} />
             )
           )}
         </div>

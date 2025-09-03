@@ -23,67 +23,88 @@ const MessagesContainer = ({
       }`}
     >
       <div className="space-y-6">
-        {messages.map((message: any, index: number) => (
-          <div
-            key={index?.toString()}
-            className={`flex ${
-              message?.senderId === userId ? "justify-end" : "justify-start"
-            } animate-in slide-in-from-bottom-4 fade-in duration-500`}
-            style={{ animationDelay: `${index * 100}ms` }}
-          >
-            <div
-              className={`
-                      max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl px-6 py-4 rounded-3xl relative overflow-hidden shadow-lg
-                      ${
-                        message?.senderId === userId
-                          ? "bg-blue-900 text-white rounded-br-lg"
-                          : "bg-white text-gray-800 rounded-bl-lg border border-gray-100"
-                      }
-                      backdrop-blur-sm hover:shadow-xl transition-all duration-300 group
-                    `}
-            >
-              <div className="flex items-start space-x-3 relative z-10">
-                <div
-                  className={`
-                          w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1
-                          ${
-                            message?.senderId === userId
-                              ? "bg-white/20 backdrop-blur-sm"
-                              : "bg-blue-100"
-                          }
-                        `}
-                >
-                  {message?.senderId === userId ? (
-                    <RiUser3Line
-                      className={`w-4 h-4 ${
-                        message?.senderId === userId
-                          ? "text-white"
-                          : "text-blue-900"
-                      }`}
-                    />
-                  ) : (
-                    <RiUser3Line className="w-4 h-4 text-blue-900" />
-                  )}
-                </div>
+        {messages.map((message: any, index: number) => {
+          // Determine if message is from the current user/HOD
+          const isOwnMessage =
+            (message.sender === "hod" && type === "hod") ||
+            (message.sender === "user" &&
+              ((message.user && message.user.toString() === userId) ||
+                (message.userDeviceId && message.userDeviceId === userId)));
 
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
-                    {message?.text}
-                  </p>
-                  <p
-                    className={`text-xs mt-2 ${
-                      message?.senderId === userId
-                        ? "text-white/70"
-                        : "text-gray-500"
-                    }`}
+          // Determine if message is from a HOD (for patient view)
+          const isHodMessage =
+            message.sender === "hod" && !isOwnMessage;
+
+          return (
+            <div
+              key={index?.toString()}
+              className={`flex ${
+                isOwnMessage ? "justify-end" : "justify-start"
+              } animate-in slide-in-from-bottom-4 fade-in duration-500`}
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <div
+                className={`
+                  max-w-xs md:max-w-md lg:max-w-lg xl:max-w-xl px-6 py-4 rounded-3xl relative overflow-hidden shadow-lg
+                  ${
+                    isOwnMessage
+                      ? "bg-blue-900 text-white rounded-br-lg"
+                      : "bg-white text-gray-800 rounded-bl-lg border border-gray-100"
+                  }
+                  backdrop-blur-sm hover:shadow-xl transition-all duration-300 group
+                `}
+              >
+                <div className="flex items-start space-x-3 relative z-10">
+                  <div
+                    className={`
+                      w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1
+                      ${
+                        isOwnMessage
+                          ? "bg-white/20 backdrop-blur-sm"
+                          : "bg-blue-100"
+                      }
+                    `}
                   >
-                    {formatTime(message?.timestamp)}
-                  </p>
+                    {message.sender === "bot" ? (
+                      <RiRobot2Line
+                        className={`w-4 h-4 ${
+                          isOwnMessage ? "text-white" : "text-blue-900"
+                        }`}
+                      />
+                    ) : (
+                      <RiUser3Line
+                        className={`w-4 h-4 ${
+                          isOwnMessage ? "text-white" : "text-blue-900"
+                        }`}
+                      />
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    {/* Optional: show who sent this message */}
+                    {isHodMessage && message.metadata?.escalatedDept && (
+                      <span className="text-xs text-gray-400 font-semibold mb-1 inline-block">
+                        Response from HOD - {message.metadata.escalatedDept}
+                      </span>
+                    )}
+
+                    <p className="text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                      {message.message}
+                    </p>
+
+                    <p
+                      className={`text-xs mt-2 ${
+                        isOwnMessage ? "text-white/70" : "text-gray-500"
+                      }`}
+                    >
+                      {formatTime(message.timestamp)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {isTyping && <TypingIndicator />}
       </div>
       <div ref={messagesEndRef} />

@@ -16,7 +16,7 @@ const TopBar = () => {
 
   return (
     <div className="z-20 w-full fixed bg-white/80 h-[70px] flex flex-row justify-between items-center px-8">
-      <div className="flex flex-row items-center gap-2">
+      <Link href={'/'} className="flex flex-row items-center gap-2">
         <Image
           width={500}
           height={500}
@@ -25,7 +25,7 @@ const TopBar = () => {
           className="h-10 w-10 object-contain"
         />
         <h1 className="text-xl font-bold text-blue-900">WMC</h1>
-      </div>
+      </Link>
       <div className="hidden md:flex flex-row items-center gap-10">
         <nav className="flex flex-roe gap-8 items-center">
           {navContent?.map((item: any, index: number) => (

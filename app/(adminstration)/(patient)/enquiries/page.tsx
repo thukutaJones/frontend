@@ -25,7 +25,7 @@ interface Message {
 const page = () => {
   const user = useAuth(["patient", "hod"]);
   const [enquires, setEnquiries] = useState<Message[]>([]);
-  const [inputText, setInputText] = useState(""); 
+  const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [typingText, setTypingText] = useState("");
@@ -88,7 +88,7 @@ const page = () => {
       setEnquiries((prev: any[]) => [...prev, newEnquiry]);
     };
 
-    newSocket.on("receiveEnquiry", handleNewEnquiry);
+    newSocket.on("receiveEscalation", handleNewEnquiry);
 
     return () => {
       disconnectSocket();
@@ -99,20 +99,20 @@ const page = () => {
     try {
       if (!user) return;
       if (!inputText.trim()) return;
-      setIsSending(true); 
-      if (showWelcome) {
-        setShowWelcome(false);
-      }
 
-      const newEnquiry: Message = {
-        text: inputText,
-        sender: user?.role === "patient" ? "patient" : "hod",
-        timestamp: new Date(),
-        senderId: user?.id,
-        receiverId: user?.role === "patient" ? null : activePatient?._id,
+      setIsSending(true);
+      if (showWelcome) setShowWelcome(false);
+
+      const newChat: any = {
+        message: inputText, // must match Chat model
+        senderId: user?.id, // HOD or patient id
+        receiverId: activePatient?._id, // patient id if HOD
+        userType: "registred", // or "guest" if using guest
+        sender: "hod"
       };
-      await socket.emit("sendEnquiry", newEnquiry);
-      setEnquiries((prev) => [...prev, newEnquiry]);
+
+      socket.emit("sendEnquiry", newChat);
+      setEnquiries((prev) => [...prev, newChat]);
       setInputText("");
     } catch (error) {
       console.log(error);
@@ -134,9 +134,7 @@ const page = () => {
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `${baseUrl}/api/enquires/${
-          user?.role === "hod" ? activePatient?._id : user?.id
-        }`,
+        `${baseUrl}/api/chats/${user?.id}/${activePatient?._id}`,
         {
           headers: {
             Authorization: `Bearer ${user?.token}`,
@@ -155,11 +153,14 @@ const page = () => {
     if (!user || user?.role !== "hod") return;
     try {
       setIsLoading(true);
-      const res = await axios.get(`${baseUrl}/api/enquires/hod/conversations`, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
+      const res = await axios.get(
+        `${baseUrl}/api/chats/hod/conversations/${user?.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      );
       setConversations(res.data);
     } catch (error) {
       console.log(error);

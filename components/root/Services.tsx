@@ -18,7 +18,7 @@ const Services = () => {
   }>;
 
   return (
-    <section className="mt-8 md:mt-28 bg-white w-full flex flex-col items-center px-4 md:px-0">
+    <section className="mt-8 md:mt-28 bg-white w-full flex flex-col items-center px-4 md:px-0" id="services">
       {/* Header */}
       <div className="text-center mb-16 max-w-4xl">
         <h2 className="text-4xl md:text-5xl font-bold text-blue-900 mb-4">
