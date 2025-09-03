@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Footer from "@/components/root/Footer";
 import HeroSection from "@/components/root/HeroSection";
 import Services from "@/components/root/Services";
 import FAQs from "@/components/root/FAQs";
@@ -12,6 +13,7 @@ export default function Page() {
       <HeroSection />
       <Services />
       <FAQs />
+      <Footer />
       {/* <ClinicTour /> */}
     </div>
   );

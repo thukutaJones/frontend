@@ -11,6 +11,7 @@ import {
   FaLinkedin
 } from "react-icons/fa";
 
+
 interface FAQ {
   id: number;
   question: string;
@@ -49,25 +50,6 @@ const FAQs: React.FC = () => {
 
   return (
     <section className="bg-white py-20 px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
-      <div className="max-w-5xl mx-auto flex-grow">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-2xl flex items-center justify-center shadow-lg">
-              <FaQuestionCircle className="w-10 h-10 text-white" />
-            </div>
-          </div>
-          <h2 className="text-5xl font-bold text-gray-800 mb-4 tracking-tight">
-            Frequently Asked Questions
-          </h2>
-          <div className="w-32 h-1.5 bg-gradient-to-r from-blue-600 to-blue-800 mx-auto mb-8 rounded-full"></div>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Find answers to common questions about our services, appointments, and facilities.
-            Use the search and filters below to quickly find what you're looking for.
-          </p>
-        </div>
-
-        {/* FAQ Items */}
         <div className="space-y-6">
           {filteredFAQs.map((faq, index) => (
             <div
@@ -117,72 +99,6 @@ const FAQs: React.FC = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Footer */}
-      {/* Footer */}
-      <footer className="mt-20 bg-gray-900 text-gray-200 w-full">
-        <div className="w-full px-6 sm:px-12 py-12 max-w-[1280px] mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {/* Contact Info */}
-          <div>
-            <h4 className="text-xl font-semibold mb-4">Contact Us</h4>
-            <p className="mb-2">Mapale, Mzuzu, Malawi</p>
-            <p className="mb-2">Phone: 0880 33 39 80</p>
-            <p>Email: wezi.enquiries@gmail.com</p>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <h4 className="text-xl font-semibold mb-4">Follow Us</h4>
-            <div className="flex gap-4 mt-2">
-              <a href="#" className="hover:text-blue-500 transition-colors">
-                <FaFacebook size={24} />
-              </a>
-              <a href="#" className="hover:text-blue-400 transition-colors">
-                <FaTwitter size={24} />
-              </a>
-              <a href="#" className="hover:text-pink-500 transition-colors">
-                <FaInstagram size={24} />
-              </a>
-              <a href="#" className="hover:text-blue-600 transition-colors">
-                <FaLinkedin size={24} />
-              </a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="text-xl font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2">
-              <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
-                  Appointments
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-blue-400 transition-colors">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div className="border-t border-gray-700 mt-8 pt-6 text-center text-sm w-full">
-          &copy; {new Date().getFullYear()} Wezi Medical Centre. All rights reserved.
-        </div>
-      </footer>
-
       <style jsx>{`
         @keyframes fadeInUp {
           from {
