@@ -104,9 +104,9 @@ export default function EnquirySidebar({
             </div>
           ) : (
             <div className="p-2">
-              {enquiries.map((enquiry) => (
+              {enquiries.map((enquiry, index) => (
                 <button
-                  key={enquiry._id}
+                  key={index?.toString()}
                   onClick={() => {
                     onEnquiryClick(enquiry?.patient);
                     if (isMobile) setIsExpanded(false);

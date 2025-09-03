@@ -247,7 +247,8 @@
     "emergencies": "Zadzidzidzi",
     "staffManagement": "Antchito",
     "staff": "Antchito",
-    "allUsers": "Ma user onse"
+    "allUsers": "Ma user onse",
+    "settings": "Zosankha"
   },
   "errors": {
     "signInInCompleteFieldsError": "Chonde lembani imelo ndi mawu achinsinsi anu kuti mupitirize!!",

@@ -6,6 +6,9 @@ import {
   hodMenuItems,
   staffMenuItems,
   patientMenuItems,
+  ambulanceDriver,
+  doctorMenuItems,
+  nurseMenuItems,
 } from "@/constants/sideBarContents";
 import Sidebar from "@/components/dashboard/Sidebar";
 import DashboardTopBar from "@/components/dashboard/DasboardTopar";
@@ -27,7 +30,6 @@ export default function DashboardLayout({ children }: LayoutProps) {
   ]);
   const userRole: any = user?.role;
 
-
   const getMenuItems = () => {
     switch (userRole) {
       case "admin":
@@ -35,9 +37,11 @@ export default function DashboardLayout({ children }: LayoutProps) {
       case "hod":
         return hodMenuItems;
       case "nurse":
+        return nurseMenuItems
       case "doctor":
+        return doctorMenuItems;
       case "ambulance_driver":
-        return staffMenuItems;
+        return ambulanceDriver;
       case "patient":
         return patientMenuItems;
       default:

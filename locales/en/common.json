@@ -211,7 +211,6 @@
     "preferredLanguage": "Prefered Language",
     "search": "Search here...",
     "district": "District"
-    
   },
   "greeting": {
     "goodMorning": "Good morning",
@@ -219,9 +218,16 @@
     "goodEvening": "Good evening",
     "goodNight": "Good night",
     "hello": "Help",
-    "dashboardGreeting": "Have a nice a day managing Wezi Clinic. Thank you for keeping everything running perfectly!",
     "weziBotGreeting": "How can Wezi Bot help you today?",
-    "readyToAssist": "Ready to assist you"
+    "readyToAssist": "Ready to assist you",
+    "dashboard": {
+      "admin": "Have a nice day managing Wezi Clinic. Thank you for keeping everything running perfectly.",
+      "hod": "Good day! Thank you for leading your department and ensuring top-quality patient care at Wezi Clinic.",
+      "doctor": "Hello Doctor! Thank you for your dedication and for providing exceptional medical care to our patients.",
+      "nurse": "Good day! Thank you for your hard work and compassionate care in supporting our patients every day.",
+      "patient": "Welcome! We hope you have a smooth and comfortable experience at Wezi Clinic. Your health is our priority.",
+      "ambulance_driver": "Hello! Thank you for being ready to respond quickly and providing vital emergency support at Wezi Clinic."
+    }
   },
   "sideBar": {
     "dashboard": "Dashboard",
@@ -249,7 +255,8 @@
     "emergencies": "Emergencies",
     "staffManagement": "Staff Management",
     "staff": "Staff",
-    "allUsers": "All Users"
+    "allUsers": "All Users",
+    "settings": "Settings"
   },
   "errors": {
     "signInInCompleteFieldsError": "Please enter both email and password to continue!!",

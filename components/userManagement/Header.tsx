@@ -52,7 +52,7 @@ const Header = ({
             >
               <option value="all">All Roles</option>
               <option value="patient">Patient</option>
-              <option value="doctor">Staff</option>
+              <option value="doctor">Doctor</option>
               <option value="nurse">Nurse</option>
               <option value="ambulance_driver">Ambulance Driver</option>
               <option value="admin">Admin</option>

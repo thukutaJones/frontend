@@ -10,12 +10,14 @@ import axios from "axios";
 import React, { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { v4 as uuidv4 } from "uuid";
+import { connectSocket, disconnectSocket } from "@/utils/socket";
 
 const page = () => {
   const user = useAuth(["patient"]);
   const [messages, setMessages] = useState<any>([]);
   const [inputText, setInputText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [socket, setSocket] = useState<any>(null);
   const [isRecording, setIsRecording] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const [typingText, setTypingText] = useState("");
@@ -58,6 +60,16 @@ const page = () => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  useEffect(() => {
+    if (!user) return;
+    const newSocket = connectSocket({ userId: user?.id });
+    setSocket(newSocket);
+
+    return () => {
+      disconnectSocket();
+    };
+  }, [user]);
 
   useEffect(() => {
     scrollToBottom();

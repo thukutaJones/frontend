@@ -9,7 +9,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 const page = () => {
-  const user = useAuth(["admin", "hod", "patient", "doctor", "ambulance_driver", "nurse"]);
+  const user = useAuth([
+    "admin",
+    "hod",
+    "patient",
+    "doctor",
+    "ambulance_driver",
+    "nurse",
+  ]);
   const [isLoading, setIsLoading] = useState(false);
   const [stats, setStats] = useState<any>(null);
 
@@ -40,7 +47,7 @@ const page = () => {
 
   return (
     <div className="w-full h-[calc(100vh-80px)] overflow-auto scroll-container p-8">
-      <HeroSection name={user?.name} />
+      <HeroSection name={user?.name} user={user} />
       {user?.role === "admin" && (
         <>
           <Stats
